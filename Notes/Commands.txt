@@ -1,0 +1,18 @@
+
+Create new Project
+npx expo-cli init guardian --npm
+
+React Navigation
+npm i react-navigation
+npm i react-navigation-stack
+
+
+
+RNGestureHandling Error
+For React Native project
+
+npm install react-native-gesture-handler
+and then import it at the top of your file.
+
+import 'react-native-gesture-handler';
+This should solve the error.

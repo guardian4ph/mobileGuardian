@@ -1,20 +1,32 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import "react-native-gesture-handler";
+import { StyleSheet, Text, View } from "react-native";
+import Landing from "./src/components/layout/Landing";
+import { createStackNavigator } from "@react-navigation/stack";
+import { NavigationContainer } from "@react-navigation/native";
+import IncidentModal from "./src/components/layout/IncidentModal";
+import Home from "./src/components/home/Home";
+import Register from "./src/components/auth/Register";
+import Privacy from "./src/legal/Privacy";
+import Terms from "./src/legal/Terms";
+const Stack = createStackNavigator();
 
-export default function App() {
+const App = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}
+        initialRouteName={"Landing"}
+      >
+        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Landing" component={Landing} />
+        <Stack.Screen name="IncidentModal" component={IncidentModal} />
+        <Stack.Screen name="Register" component={Register} />
+        <Stack.Screen name="Privacy" component={Privacy} />
+        <Stack.Screen name="Terms" component={Terms} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+};
+export default App;
