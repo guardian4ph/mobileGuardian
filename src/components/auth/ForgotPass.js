@@ -1,9 +1,8 @@
 import React from "react";
 import { Text, View, StyleSheet, SafeAreaView, StatusBar } from "react-native";
-import { Feather } from "@expo/vector-icons";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
-import { Ionicons } from "@expo/vector-icons";
-const Register = (props) => {
+import { Ionicons, AntDesign } from "@expo/vector-icons";
+const ForgotPass = (props) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.backBtn}>
@@ -25,58 +24,26 @@ const Register = (props) => {
               paddingVertical: 20,
             }}
           >
-            <Feather name="user" size={24} color="#215a75" />
-            <Text style={styles.txtMain}>Create Your Account</Text>
+            <AntDesign name="key" size={24} color="#215a75" />
+
+            <Text style={styles.txtMain}> Forgot Password</Text>
           </View>
           <Text style={[styles.txtDark, styles.fontSmall]}>
-            Volunteer, and start saving lives and properties.
+            Enter your email address, for verification.
           </Text>
+
           <TextInput
             style={styles.inputStyle}
-            placeholder="First Name"
+            placeholder="admin@guardian.ph"
             autoCapitalize="none"
             autoCorrect={false}
           ></TextInput>
-          <TextInput
-            style={styles.inputStyle}
-            placeholder="Last Name"
-            autoCapitalize="none"
-            autoCorrect={false}
-          ></TextInput>
-          <TextInput
-            style={styles.inputStyle}
-            placeholder="09XXXXXXXXX"
-            autoCapitalize="none"
-            autoCorrect={false}
-          ></TextInput>
-          <View>
-            <Text style={[styles.txtDark, styles.fontSmall]}>
-              This site uses your mobile number for authentication, sending
-              alerts and other communication.
-            </Text>
-          </View>
-          <TextInput
-            style={styles.inputStyle}
-            placeholder="E-mail"
-            autoCapitalize="none"
-            autoCorrect={false}
-          ></TextInput>
-          <TextInput
-            style={styles.inputStyle}
-            placeholder="Password"
-            autoCapitalize="none"
-            autoCorrect={false}
-            secureTextEntry={true}
-          ></TextInput>
-          <TextInput
-            style={styles.inputStyle}
-            placeholder="Confirm Password"
-            autoCapitalize="none"
-            autoCorrect={false}
-            secureTextEntry={true}
-          ></TextInput>
-          <TouchableOpacity style={[styles.btnView, styles.btnMain]}>
-            <Text style={[styles.btnContent, styles.txtWhite]}>Register</Text>
+
+          <TouchableOpacity
+            onPress={() => props.navigation.navigate("Otp")}
+            style={[styles.btnView, styles.btnMain]}
+          >
+            <Text style={[styles.btnContent, styles.txtWhite]}>Send OTP</Text>
           </TouchableOpacity>
           <View
             style={{
@@ -86,11 +53,11 @@ const Register = (props) => {
               paddingBottom: 20,
             }}
           >
-            <Text style={[styles.txtDark]}>Already have an account?</Text>
+            <Text style={[styles.txtDark]}>Don't have an account?</Text>
             <TouchableOpacity
-              onPress={() => props.navigation.navigate("Login")}
+              onPress={() => props.navigation.navigate("Register")}
             >
-              <Text style={[styles.txtMain]}> Sign In</Text>
+              <Text style={[styles.txtMain]}> Register</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -168,4 +135,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Register;
+export default ForgotPass;

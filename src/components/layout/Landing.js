@@ -26,6 +26,7 @@ const Landing = (props) => {
   let [fontsLoaded] = useFonts({
     Inter_300Light,
     Inter_600SemiBold,
+    Inter_700Bold,
     Comfortaa_500Medium,
   });
 
@@ -66,7 +67,7 @@ const Landing = (props) => {
                     fontSize: 50,
                     letterSpacing: 8,
                     color: "#fff",
-                    fontFamily: "Inter_600SemiBold",
+                    fontFamily: "Inter_700Bold",
                     textAlign: "center",
                     textShadowColor: "rgba(0, 0, 0, 0.95)",
                     textShadowOffset: { width: -1, height: 1 },
@@ -96,7 +97,7 @@ const Landing = (props) => {
               <View>
                 <Text
                   style={{
-                    paddingVertical: 10,
+                    paddingVertical: 20,
                     fontSize: 24,
                     letterSpacing: 1,
                     color: "#fff",
@@ -127,7 +128,9 @@ const Landing = (props) => {
                   </TouchableOpacity>
                 </View>
                 <View style={[styles.btnView, styles.btnSecondary]}>
-                  <TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => props.navigation.navigate("Login")}
+                  >
                     <Text style={[styles.btnContent, styles.txtDark]}>
                       Login
                     </Text>
@@ -293,9 +296,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     height: 38,
     // marginVertical: 20,
-    width: 180,
+    width: 150,
     padding: 10,
-    marginHorizontal: 3,
+    marginHorizontal: 5,
   },
   btnDanger: {
     backgroundColor: "#dc3545",

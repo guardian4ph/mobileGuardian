@@ -48,7 +48,7 @@ const Privacy = (props) => {
             <Ionicons name="arrow-back-circle-outline" size={24} color="#333" />
           </TouchableOpacity>
         </View>
-        <ScrollView>
+        <ScrollView style={{ paddingHorizontal: 10 }}>
           <Text style={styles.txtHeader}>Privacy Policy</Text>
           <Text style={styles.txtMain}>Updated at 2022-03-15</Text>
           <Text style={styles.txtMain}>

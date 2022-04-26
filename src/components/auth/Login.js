@@ -1,9 +1,8 @@
 import React from "react";
 import { Text, View, StyleSheet, SafeAreaView, StatusBar } from "react-native";
-import { Feather } from "@expo/vector-icons";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
-const Register = (props) => {
+const Login = (props) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.backBtn}>
@@ -17,44 +16,7 @@ const Register = (props) => {
       </View>
       <View style={styles.subContainer}>
         <View style={styles.componentsContainer}>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              paddingVertical: 20,
-            }}
-          >
-            <Feather name="user" size={24} color="#215a75" />
-            <Text style={styles.txtMain}>Create Your Account</Text>
-          </View>
-          <Text style={[styles.txtDark, styles.fontSmall]}>
-            Volunteer, and start saving lives and properties.
-          </Text>
-          <TextInput
-            style={styles.inputStyle}
-            placeholder="First Name"
-            autoCapitalize="none"
-            autoCorrect={false}
-          ></TextInput>
-          <TextInput
-            style={styles.inputStyle}
-            placeholder="Last Name"
-            autoCapitalize="none"
-            autoCorrect={false}
-          ></TextInput>
-          <TextInput
-            style={styles.inputStyle}
-            placeholder="09XXXXXXXXX"
-            autoCapitalize="none"
-            autoCorrect={false}
-          ></TextInput>
-          <View>
-            <Text style={[styles.txtDark, styles.fontSmall]}>
-              This site uses your mobile number for authentication, sending
-              alerts and other communication.
-            </Text>
-          </View>
+          <View style={{ paddingTop: 40 }}></View>
           <TextInput
             style={styles.inputStyle}
             placeholder="E-mail"
@@ -68,16 +30,27 @@ const Register = (props) => {
             autoCorrect={false}
             secureTextEntry={true}
           ></TextInput>
-          <TextInput
-            style={styles.inputStyle}
-            placeholder="Confirm Password"
-            autoCapitalize="none"
-            autoCorrect={false}
-            secureTextEntry={true}
-          ></TextInput>
-          <TouchableOpacity style={[styles.btnView, styles.btnMain]}>
-            <Text style={[styles.btnContent, styles.txtWhite]}>Register</Text>
+
+          <TouchableOpacity
+            onPress={() => props.navigation.navigate("Post")}
+            style={[styles.btnView, styles.btnMain]}
+          >
+            <Text style={[styles.btnContent, styles.txtWhite]}>Login</Text>
           </TouchableOpacity>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Text style={[styles.txtDark]}>Don't have an account?</Text>
+            <TouchableOpacity
+              onPress={() => props.navigation.navigate("Register")}
+            >
+              <Text style={[styles.txtMain]}> Register</Text>
+            </TouchableOpacity>
+          </View>
           <View
             style={{
               display: "flex",
@@ -86,11 +59,11 @@ const Register = (props) => {
               paddingBottom: 20,
             }}
           >
-            <Text style={[styles.txtDark]}>Already have an account?</Text>
+            <Text style={[styles.txtDark]}>Forgot password?</Text>
             <TouchableOpacity
-              onPress={() => props.navigation.navigate("Login")}
+              onPress={() => props.navigation.navigate("ForgotPass")}
             >
-              <Text style={[styles.txtMain]}> Sign In</Text>
+              <Text style={[styles.txtMain]}> Forgot</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -168,4 +141,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Register;
+export default Login;

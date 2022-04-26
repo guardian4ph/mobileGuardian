@@ -47,7 +47,7 @@ const Terms = (props) => {
             <Ionicons name="arrow-back-circle-outline" size={24} color="#333" />
           </TouchableOpacity>
         </View>
-        <ScrollView>
+        <ScrollView style={{ paddingHorizontal: 10 }}>
           <Text style={styles.txtHeader}>Terms & Conditions</Text>
           <Text style={styles.txtMain}>Updated at 2022-03-22</Text>
           <Text style={styles.txtHeader}>General Terms</Text>

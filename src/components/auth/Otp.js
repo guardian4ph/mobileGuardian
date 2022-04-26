@@ -1,9 +1,8 @@
 import React from "react";
 import { Text, View, StyleSheet, SafeAreaView, StatusBar } from "react-native";
-import { Feather } from "@expo/vector-icons";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
-import { Ionicons } from "@expo/vector-icons";
-const Register = (props) => {
+import { Ionicons, AntDesign } from "@expo/vector-icons";
+const Otp = (props) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.backBtn}>
@@ -25,75 +24,38 @@ const Register = (props) => {
               paddingVertical: 20,
             }}
           >
-            <Feather name="user" size={24} color="#215a75" />
-            <Text style={styles.txtMain}>Create Your Account</Text>
+            <AntDesign name="key" size={24} color="#215a75" />
+
+            <Text style={styles.txtMain}> One Time Password</Text>
           </View>
           <Text style={[styles.txtDark, styles.fontSmall]}>
-            Volunteer, and start saving lives and properties.
+            You will receive a One-Time Password (OTP) on your registered mobile
+            number.
           </Text>
+
           <TextInput
             style={styles.inputStyle}
-            placeholder="First Name"
-            autoCapitalize="none"
-            autoCorrect={false}
-          ></TextInput>
-          <TextInput
-            style={styles.inputStyle}
-            placeholder="Last Name"
-            autoCapitalize="none"
-            autoCorrect={false}
-          ></TextInput>
-          <TextInput
-            style={styles.inputStyle}
-            placeholder="09XXXXXXXXX"
-            autoCapitalize="none"
-            autoCorrect={false}
-          ></TextInput>
-          <View>
-            <Text style={[styles.txtDark, styles.fontSmall]}>
-              This site uses your mobile number for authentication, sending
-              alerts and other communication.
-            </Text>
-          </View>
-          <TextInput
-            style={styles.inputStyle}
-            placeholder="E-mail"
-            autoCapitalize="none"
-            autoCorrect={false}
-          ></TextInput>
-          <TextInput
-            style={styles.inputStyle}
-            placeholder="Password"
+            placeholder="XXXXXX"
             autoCapitalize="none"
             autoCorrect={false}
             secureTextEntry={true}
           ></TextInput>
-          <TextInput
-            style={styles.inputStyle}
-            placeholder="Confirm Password"
-            autoCapitalize="none"
-            autoCorrect={false}
-            secureTextEntry={true}
-          ></TextInput>
-          <TouchableOpacity style={[styles.btnView, styles.btnMain]}>
-            <Text style={[styles.btnContent, styles.txtWhite]}>Register</Text>
+          <Text style={[styles.txtDark, styles.fontSmall]}>
+            Did you receive an OTP?
+          </Text>
+          <TouchableOpacity style={[styles.btnView, styles.btnSecondary]}>
+            <Text style={[styles.btnContent, styles.txtDark]}>Resend OTP</Text>
           </TouchableOpacity>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              paddingBottom: 20,
-            }}
-          >
-            <Text style={[styles.txtDark]}>Already have an account?</Text>
-            <TouchableOpacity
-              onPress={() => props.navigation.navigate("Login")}
-            >
-              <Text style={[styles.txtMain]}> Sign In</Text>
-            </TouchableOpacity>
-          </View>
+          <Text style={[styles.txtDark, styles.fontSmall]}>
+            If you need to change your mobile number, you may do so through
+            Update Profile, or by reaching out to your Operation Center
+            Administrator at admin@guardian.ph
+          </Text>
+          <TouchableOpacity style={[styles.btnView, styles.btnMain]}>
+            <Text style={[styles.btnContent, styles.txtWhite]}>Proceed</Text>
+          </TouchableOpacity>
         </View>
+        <View style={{ paddingBottom: 20 }}></View>
       </View>
     </SafeAreaView>
   );
@@ -119,6 +81,8 @@ const styles = StyleSheet.create({
   },
   componentsContainer: {
     width: "90%",
+    display: "flex",
+    alignItems: "center",
   },
   backBtn: {
     position: "absolute",
@@ -134,6 +98,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderColor: "#ddd",
     borderRadius: 3,
+    textAlign: "center",
   },
   btnView: {
     borderColor: "#fff",
@@ -159,6 +124,7 @@ const styles = StyleSheet.create({
   },
   txtDark: {
     color: "#333",
+    textAlign: "center",
   },
   txtMain: {
     color: "#215a75",
@@ -168,4 +134,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Register;
+export default Otp;
