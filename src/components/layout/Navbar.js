@@ -1,11 +1,13 @@
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
-import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import { Image, Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import {
   Ionicons,
   Feather,
   FontAwesome,
   MaterialIcons,
+  AntDesign,
+  MaterialCommunityIcons,
 } from "@expo/vector-icons";
 
 const Navbar = (props) => {
@@ -20,23 +22,33 @@ const Navbar = (props) => {
           <Text style={[styles.txtWhite, styles.btnContent]}>Home</Text>
         </View>
         <View style={styles.componentsContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate("Landing")}>
+          <TouchableOpacity onPress={() => navigation.navigate("ID")}>
             <FontAwesome name="id-badge" size={24} color="#fff" />
           </TouchableOpacity>
           <Text style={[styles.txtWhite, styles.btnContent]}>ID</Text>
         </View>
         <View style={styles.componentsContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate("Landing")}>
-            <MaterialIcons name="add-alert" size={24} color="#fff" />
-          </TouchableOpacity>
-          <Text style={[styles.txtWhite, styles.btnContent]}>Report</Text>
+          <View style={styles.guardianIconContainer}>
+            <TouchableOpacity onPress={() => navigation.navigate("Landing")}>
+              <Image
+                style={styles.guardianIcon}
+                source={require("../../../assets/icons/incident/Button.png")}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
         <View style={styles.componentsContainer}>
+          <TouchableOpacity onPress={() => navigation.navigate("Landing")}>
+            <AntDesign name="notification" size={24} color="#fff" />
+          </TouchableOpacity>
+          <Text style={[styles.txtWhite, styles.btnContent]}>Notification</Text>
+        </View>
+        {/* <View style={styles.componentsContainer}>
           <TouchableOpacity onPress={() => navigation.navigate("Landing")}>
             <Feather name="message-square" size={24} color="#fff" />
           </TouchableOpacity>
           <Text style={[styles.txtWhite, styles.btnContent]}>Messages</Text>
-        </View>
+        </View> */}
         <View style={styles.componentsContainer}>
           <TouchableOpacity onPress={() => navigation.navigate("Landing")}>
             <Ionicons name="person-circle-outline" size={24} color="#fff" />
@@ -56,7 +68,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: 77,
+    height: 90,
     zIndex: 99,
   },
   subContainer: {
@@ -67,9 +79,23 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   componentsContainer: {
+    position: "relative",
     width: 100,
     alignItems: "center",
     justifyContent: "center",
+  },
+  guardianIconContainer: {
+    position: "absolute",
+    top: -50,
+    width: 100,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#215a75",
+    borderRadius: 50,
+  },
+  guardianIcon: {
+    width: 100,
+    height: 100,
   },
   backBtn: {
     position: "absolute",

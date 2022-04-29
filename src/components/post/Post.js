@@ -1,42 +1,23 @@
 import React from "react";
-import { Text, View, StyleSheet, StatusBar } from "react-native";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
-import { Ionicons } from "@expo/vector-icons";
+import { View, StyleSheet, StatusBar } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import Navbar from "../layout/Navbar";
 import PostItem from "../posts/PostItem";
-import {
-  useSafeAreaInsets,
-  SafeAreaProvider,
-} from "react-native-safe-area-context";
-
-// Status Bar
-
-const CustomStatusBar = ({ backgroundColor, barStyle = "light-content" }) => {
-  const insets = useSafeAreaInsets();
-
-  return (
-    <View style={{ height: insets.top, backgroundColor }}>
-      <StatusBar
-        animated={true}
-        backgroundColor={backgroundColor}
-        barStyle={barStyle}
-        translucent={true}
-      ></StatusBar>
-    </View>
-  );
-};
-
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import CustomStatusBar from "../layout/CustomStatusBar";
+import AnnouncementCarousel from "../announcement/AnnouncementCarousel";
 const Post = (props) => {
   return (
     <SafeAreaProvider>
       <CustomStatusBar backgroundColor="#215a75" />
       <ScrollView style={styles.viewContainer}>
+        <AnnouncementCarousel />
+        <PostItem />
         <PostItem />
         <PostItem />
         <PostItem />
         <PostItem />
       </ScrollView>
-
       <Navbar />
     </SafeAreaProvider>
   );

@@ -74,7 +74,7 @@ const PostItem = (props) => {
         <View style={styles.componentsPhoto}>
           <View>
             <Image
-              source={require("../../../assets/Notifications/crime/bulglar.gif")}
+              source={require("../../../assets/annoucement/Fire/fireDrill.gif")}
             />
           </View>
         </View>

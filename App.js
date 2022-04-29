@@ -11,6 +11,7 @@ import Privacy from "./src/components/legal/Privacy";
 import Terms from "./src/components/legal/Terms";
 import Otp from "./src/components/auth/Otp";
 import Post from "./src/components/post/Post";
+import ID from "./src/components/id/ID";
 
 const Stack = createStackNavigator();
 
@@ -33,6 +34,7 @@ const App = () => {
         <Stack.Screen name="ForgotPass" component={ForgotPass} />
         <Stack.Screen name="Otp" component={Otp} />
         <Stack.Screen name="Post" component={Post} />
+        <Stack.Screen name="ID" component={ID} />
       </Stack.Navigator>
     </NavigationContainer>
   );
