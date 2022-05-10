@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -41,7 +41,7 @@ const Landing = (props) => {
           imageStyle={{ opacity: 0.5 }}
         >
           <View style={styles.backBtn}>
-            <TouchableOpacity onPress={() => props.navigation.navigate("Home")}>
+            <TouchableOpacity>
               <Ionicons
                 name="arrow-back-circle-outline"
                 size={24}

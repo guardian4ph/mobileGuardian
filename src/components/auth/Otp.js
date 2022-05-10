@@ -39,6 +39,7 @@ const Otp = (props) => {
             autoCapitalize="none"
             autoCorrect={false}
             secureTextEntry={true}
+            placeholderTextColor="#333"
           ></TextInput>
           <Text style={[styles.txtDark, styles.fontSmall]}>
             Did you receive an OTP?

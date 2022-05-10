@@ -1,12 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { Text, View, StyleSheet, SafeAreaView, StatusBar } from "react-native";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
-const Login = (props) => {
+
+const Login = ({ navigation }) => {
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.backBtn}>
-        <TouchableOpacity onPress={() => props.navigation.navigate("Landing")}>
+        <TouchableOpacity onPress={() => navigation.navigate("Landing")}>
           <Ionicons
             name="arrow-back-circle-outline"
             size={24}
@@ -22,17 +28,19 @@ const Login = (props) => {
             placeholder="E-mail"
             autoCapitalize="none"
             autoCorrect={false}
-          ></TextInput>
+            placeholderTextColor="#333"
+          />
           <TextInput
             style={styles.inputStyle}
             placeholder="Password"
             autoCapitalize="none"
             autoCorrect={false}
             secureTextEntry={true}
-          ></TextInput>
+            placeholderTextColor="#333"
+          />
 
           <TouchableOpacity
-            onPress={() => props.navigation.navigate("Post")}
+            onPress={() => navigation.navigate("Posts")}
             style={[styles.btnView, styles.btnMain]}
           >
             <Text style={[styles.btnContent, styles.txtWhite]}>Login</Text>
@@ -45,9 +53,7 @@ const Login = (props) => {
             }}
           >
             <Text style={[styles.txtDark]}>Don't have an account?</Text>
-            <TouchableOpacity
-              onPress={() => props.navigation.navigate("Register")}
-            >
+            <TouchableOpacity onPress={() => navigation.navigate("Register")}>
               <Text style={[styles.txtMain]}> Register</Text>
             </TouchableOpacity>
           </View>
@@ -60,9 +66,7 @@ const Login = (props) => {
             }}
           >
             <Text style={[styles.txtDark]}>Forgot password?</Text>
-            <TouchableOpacity
-              onPress={() => props.navigation.navigate("ForgotPass")}
-            >
+            <TouchableOpacity onPress={() => navigation.navigate("ForgotPass")}>
               <Text style={[styles.txtMain]}> Forgot</Text>
             </TouchableOpacity>
           </View>

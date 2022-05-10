@@ -1,28 +1,9 @@
-import React, { useEffect, useState, useContext } from "react";
+import React from "react";
 import { Text, View, StyleSheet, SafeAreaView, StatusBar } from "react-native";
-import { input } from "react-native-elements";
 import { Feather } from "@expo/vector-icons";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
-import { Context as AuthContext } from "../../context/AuthContext";
-
-const Register = ({ navigation }) => {
-  const { state, registerUser } = useContext(AuthContext);
-  const [name, setName] = useState("");
-  const [lname, setLname] = useState("");
-  const [number, setNumber] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [password2, setPassword2] = useState("");
-
-  const onSubmit = async (e) => {
-    if (password !== password2) {
-      console.log("Password dont match");
-    } else {
-      registerUser({ name, lname, number, email, password });
-    }
-  };
-
+const CreateProfile = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.backBtn}>
@@ -45,90 +26,78 @@ const Register = ({ navigation }) => {
             }}
           >
             <Feather name="user" size={24} color="#215a75" />
-            <Text style={styles.txtMain}>Create Your Account</Text>
+            <Text style={styles.txtMain}>Create Your Profile</Text>
           </View>
           <Text style={[styles.txtDark, styles.fontSmall]}>
-            Volunteer, and start saving lives and properties.
+            Tell us about yourself
           </Text>
           <TextInput
             style={styles.inputStyle}
-            placeholder="First Name"
-            value={name}
-            autoCorrect={false}
-            placeholderTextColor="#333"
-            onChangeText={setName}
-          ></TextInput>
-          <TextInput
-            style={styles.inputStyle}
-            placeholder="Last Name"
-            value={lname}
-            autoCorrect={false}
-            placeholderTextColor="#333"
-            onChangeText={setLname}
-          ></TextInput>
-          <TextInput
-            style={styles.inputStyle}
-            placeholder="09XXXXXXXXX"
-            value={number}
+            placeholder="Address"
             autoCapitalize="none"
             autoCorrect={false}
-            placeholderTextColor="#333"
-            onChangeText={setNumber}
+          ></TextInput>
+          <TextInput
+            style={styles.inputStyle}
+            placeholder="Gender"
+            autoCapitalize="none"
+            autoCorrect={false}
+          ></TextInput>
+          <TextInput
+            style={styles.inputStyle}
+            placeholder="Civil Status"
+            autoCapitalize="none"
+            autoCorrect={false}
+          ></TextInput>
+
+          <TextInput
+            style={styles.inputStyle}
+            placeholder="Birthday"
+            autoCapitalize="none"
+            autoCorrect={false}
+          ></TextInput>
+          <TextInput
+            style={styles.inputStyle}
+            placeholder="Company"
+            autoCapitalize="none"
+            autoCorrect={false}
+          ></TextInput>
+          <TextInput
+            style={styles.inputStyle}
+            placeholder="Contact Person"
+            autoCapitalize="none"
+            autoCorrect={false}
+            secureTextEntry={true}
           ></TextInput>
           <View>
             <Text style={[styles.txtDark, styles.fontSmall]}>
-              This site uses your mobile number for authentication, sending
-              alerts and other communication.
+              Person to contact in case of emergency
             </Text>
           </View>
           <TextInput
             style={styles.inputStyle}
-            placeholder="E-mail"
-            value={email}
+            placeholder="09XXXXXXXXX"
             autoCapitalize="none"
             autoCorrect={false}
-            placeholderTextColor="#333"
-            onChangeText={setEmail}
           ></TextInput>
-          <TextInput
-            style={styles.inputStyle}
-            placeholder="Password"
-            value={password}
-            autoCapitalize="none"
-            autoCorrect={false}
-            secureTextEntry={true}
-            placeholderTextColor="#333"
-            onChangeText={setPassword}
-          ></TextInput>
-          <TextInput
-            style={styles.inputStyle}
-            placeholder="Confirm Password"
-            value={password2}
-            autoCapitalize="none"
-            autoCorrect={false}
-            secureTextEntry={true}
-            placeholderTextColor="#333"
-            onChangeText={setPassword2}
-          ></TextInput>
-          <TouchableOpacity
-            style={[styles.btnView, styles.btnMain]}
-            onPress={() => onSubmit()}
-          >
-            <Text style={[styles.btnContent, styles.txtWhite]}>Register</Text>
-          </TouchableOpacity>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              paddingBottom: 20,
-            }}
-          >
-            <Text style={[styles.txtDark]}>Already have an account?</Text>
-            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-              <Text style={[styles.txtMain]}> Sign In</Text>
-            </TouchableOpacity>
+
+          <View>
+            <Text style={[styles.txtDark, styles.fontSmall]}>
+              Contact number
+            </Text>
           </View>
+          <TextInput
+            style={styles.inputStyle}
+            placeholder="Blood Type"
+            autoCapitalize="none"
+            autoCorrect={false}
+            secureTextEntry={true}
+          ></TextInput>
+          <TouchableOpacity style={[styles.btnView, styles.btnMain]}>
+            <Text style={[styles.btnContent, styles.txtWhite]}>
+              CreateProfile
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
@@ -179,6 +148,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginHorizontal: 3,
     marginVertical: 10,
+    marginBottom: 20,
   },
   btnContent: {
     fontSize: 13,
@@ -204,4 +174,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Register;
+export default CreateProfile;

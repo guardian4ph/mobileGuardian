@@ -83,16 +83,16 @@ const styles = StyleSheet.create({
 
   logoContainer: {
     position: "absolute",
-    top: 10,
-    right: 10,
+    top: 5,
+    left: 5,
     zIndex: 5,
   },
   logoOpcen: {
     height: 40,
     width: 40,
     borderRadius: 50,
-    borderColor: "#fff",
-    borderWidth: 1,
+    borderColor: "#215a75",
+    borderWidth: 3,
   },
 });
 

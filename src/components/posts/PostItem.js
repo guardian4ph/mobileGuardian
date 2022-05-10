@@ -1,5 +1,14 @@
 import React from "react";
-import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { Dimensions } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  StatusBar,
+  TouchableOpacity,
+  ImageBackground,
+} from "react-native";
 import {
   useFonts,
   Inter_100Thin,
@@ -14,7 +23,7 @@ import {
 } from "@expo-google-fonts/inter";
 import AppLoading from "expo-app-loading";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
-
+const win = Dimensions.get("window");
 const PostItem = (props) => {
   let [fontsLoaded] = useFonts({
     Inter_100Thin,
@@ -72,9 +81,16 @@ const PostItem = (props) => {
           </Text>
         </View>
         <View style={styles.componentsPhoto}>
-          <View>
+          <View
+            style={{ maxWidth: Dimensions.get("window").width, height: 420 }}
+          >
             <Image
-              source={require("../../../assets/annoucement/Fire/fireDrill.gif")}
+              style={styles.PostImage}
+              // source={require("../../../assets/annoucement/trees.jpeg")}
+              source={{
+                uri: "https://guardian.ph/public/Pic-1651194056834.jpg",
+              }}
+              // source={{ uri: "https://reactnative.dev/img/tiny_logo.png" }}
             />
           </View>
         </View>
@@ -109,21 +125,54 @@ const PostItem = (props) => {
 
 const styles = StyleSheet.create({
   subContainer: {
-    width: "100%",
     marginVertical: 3,
-    overflow: "hidden",
   },
 
   componentsTitle: {
     backgroundColor: "#fff",
-    height: 68,
+    height: 70,
     overflow: "hidden",
+  },
+  componentsBody: {
+    backgroundColor: "#fff",
+    height: 75,
+    borderTopColor: "#ddd",
+    borderTopWidth: 1,
+    paddingHorizontal: 10,
+    justifyContent: "center",
+  },
+  componentsPhoto: {
+    backgroundColor: "#ddd",
+    height: undefined,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  PostImage: {
+    resizeMode: "contain",
+    height: 420,
+    width: Dimensions.get("window").width,
+  },
+
+  componentsReaction: {
+    backgroundColor: "#fff",
+    height: 40,
+  },
+  componentsMenu: {
+    backgroundColor: "#fff",
+    height: 50,
+    flexDirection: "row",
+    borderTopColor: "#ddd",
+    borderTopWidth: 1,
+    justifyContent: "space-around",
+    alignItems: "center",
   },
   componentsTitleContent: {
     display: "flex",
     flexDirection: "row",
     height: "100%",
     alignItems: "center",
+    maxHeight: 440,
   },
   postLogo: {
     width: 50,
@@ -131,7 +180,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     borderRadius: 50,
   },
-
   shadow: {
     ...Platform.select({
       ios: {
@@ -169,40 +217,12 @@ const styles = StyleSheet.create({
     left: 20,
   },
 
-  componentsBody: {
-    backgroundColor: "#fff",
-    height: 80,
-    borderTopColor: "#ddd",
-    borderTopWidth: 1,
-    paddingHorizontal: 10,
-    justifyContent: "center",
-  },
-
   componentsBodyText: {
     fontFamily: "Inter_400Regular",
     color: "#333",
     fontSize: 12,
   },
 
-  componentsPhoto: {
-    backgroundColor: "steelblue",
-    display: "flex",
-    alignItems: "center",
-    backgroundColor: "#ddd",
-  },
-  componentsReaction: {
-    backgroundColor: "#fff",
-    height: 39,
-  },
-  componentsMenu: {
-    backgroundColor: "#fff",
-    height: 50,
-    flexDirection: "row",
-    borderTopColor: "#ddd",
-    borderTopWidth: 1,
-    justifyContent: "space-around",
-    alignItems: "center",
-  },
   componentsMenuIcons: {
     flexDirection: "row",
     alignItems: "center",

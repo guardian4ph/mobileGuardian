@@ -37,7 +37,7 @@ const ID = (props) => {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.backBtn}>
-          <TouchableOpacity onPress={() => props.navigation.navigate("Post")}>
+          <TouchableOpacity onPress={() => props.navigation.navigate("Posts")}>
             <Ionicons
               name="arrow-back-circle-outline"
               size={30}
@@ -50,7 +50,9 @@ const ID = (props) => {
           <View style={styles.idHolder}></View>
           <View style={styles.componentsContainer}>
             <View style={styles.photoContainer}>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => props.navigation.navigate("QrPhoto")}
+              >
                 <Image
                   style={styles.profileImage}
                   source={require("../../../assets/img/Profile/profile.jpg")}
@@ -269,10 +271,9 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   profileImage: {
-    width: 200,
-    height: 200,
-    borderRadius: 100,
-
+    width: 240,
+    height: 240,
+    borderRadius: 300,
     borderColor: "#215a75",
     borderWidth: 5,
   },

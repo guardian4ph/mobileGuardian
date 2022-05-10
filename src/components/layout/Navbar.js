@@ -29,7 +29,9 @@ const Navbar = (props) => {
         </View>
         <View style={styles.componentsContainer}>
           <View style={styles.guardianIconContainer}>
-            <TouchableOpacity onPress={() => navigation.navigate("Landing")}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("IncidentModal")}
+            >
               <Image
                 style={styles.guardianIcon}
                 source={require("../../../assets/icons/incident/Button.png")}
@@ -50,7 +52,9 @@ const Navbar = (props) => {
           <Text style={[styles.txtWhite, styles.btnContent]}>Messages</Text>
         </View> */}
         <View style={styles.componentsContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate("Landing")}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("CreateProfile")}
+          >
             <Ionicons name="person-circle-outline" size={24} color="#fff" />
           </TouchableOpacity>
           <Text style={[styles.txtWhite, styles.btnContent]}>Profile</Text>

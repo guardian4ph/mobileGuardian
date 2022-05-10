@@ -21,7 +21,7 @@ const IncidentModal = (props) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.backBtn}>
-        <TouchableOpacity onPress={() => props.navigation.navigate("Home")}>
+        <TouchableOpacity onPress={() => props.navigation.navigate("Posts")}>
           <Ionicons name="arrow-back-circle-outline" size={24} color="#333" />
         </TouchableOpacity>
       </View>
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   backBtn: {
     position: "absolute",
     top: 50,
-    right: 20,
+    left: 20,
     zIndex: 5,
   },
 
