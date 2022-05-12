@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Text,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import AppLoading from "expo-app-loading";
 import { Comfortaa_500Medium } from "@expo-google-fonts/comfortaa";
@@ -21,14 +22,35 @@ import {
   Inter_800ExtraBold,
   Inter_900Black,
 } from "@expo-google-fonts/inter";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const Landing = (props) => {
+const Landing = () => {
   let [fontsLoaded] = useFonts({
     Inter_300Light,
     Inter_600SemiBold,
     Inter_700Bold,
     Comfortaa_500Medium,
   });
+  const navigation = useNavigation();
+
+  const [token, setToken] = useState("");
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("token");
+      if (value !== null) {
+        setToken(value);
+        console.log("Token", value);
+        navigation.navigate("Posts");
+      }
+    } catch (err) {
+      console.log("Error", err);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, [token]);
 
   if (!fontsLoaded) {
     return <AppLoading />;
@@ -120,7 +142,7 @@ const Landing = (props) => {
               >
                 <View style={[styles.btnView, styles.btnMain]}>
                   <TouchableOpacity
-                    onPress={() => props.navigation.navigate("Register")}
+                    onPress={() => navigation.navigate("Register")}
                   >
                     <Text style={[styles.btnContent, styles.txtWhite]}>
                       Register
@@ -129,7 +151,7 @@ const Landing = (props) => {
                 </View>
                 <View style={[styles.btnView, styles.btnSecondary]}>
                   <TouchableOpacity
-                    onPress={() => props.navigation.navigate("Login")}
+                    onPress={() => navigation.navigate("Login")}
                   >
                     <Text style={[styles.btnContent, styles.txtDark]}>
                       Login
@@ -160,9 +182,7 @@ const Landing = (props) => {
           {/* Footer */}
           <View style={styles.footer}>
             <View style={{ flexDirection: "row" }}>
-              <TouchableOpacity
-                onPress={() => props.navigation.navigate("Privacy")}
-              >
+              <TouchableOpacity onPress={() => navigation.navigate("Privacy")}>
                 <Text
                   style={{
                     fontSize: 12,
@@ -185,9 +205,7 @@ const Landing = (props) => {
               >
                 |
               </Text>
-              <TouchableOpacity
-                onPress={() => props.navigation.navigate("Terms")}
-              >
+              <TouchableOpacity onPress={() => navigation.navigate("Terms")}>
                 <Text
                   style={{
                     fontSize: 12,
@@ -210,9 +228,7 @@ const Landing = (props) => {
               >
                 |
               </Text>
-              <TouchableOpacity
-                onPress={() => props.navigation.navigate("Home")}
-              >
+              <TouchableOpacity onPress={() => navigation.navigate("Home")}>
                 <Text
                   style={{
                     fontSize: 12,

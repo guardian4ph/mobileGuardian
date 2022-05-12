@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Image, Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import {
@@ -9,9 +9,18 @@ import {
   AntDesign,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
+import { Context as AuthContext } from "../../context/AuthContext";
 
 const Navbar = (props) => {
+  const { state, logout } = useContext(AuthContext);
   const navigation = useNavigation();
+
+  useEffect(() => {
+    if (!state.token) {
+      navigation.navigate("Landing");
+    }
+  }, [state.token]);
+
   return (
     <View style={styles.container}>
       <View style={styles.subContainer}>
@@ -52,9 +61,8 @@ const Navbar = (props) => {
           <Text style={[styles.txtWhite, styles.btnContent]}>Messages</Text>
         </View> */}
         <View style={styles.componentsContainer}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("CreateProfile")}
-          >
+          {/* <TouchableOpacity onPress={() => logout()}> */}
+          <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
             <Ionicons name="person-circle-outline" size={24} color="#fff" />
           </TouchableOpacity>
           <Text style={[styles.txtWhite, styles.btnContent]}>Profile</Text>

@@ -1,3 +1,4 @@
+import React, { useEffect } from "react";
 import "react-native-gesture-handler";
 import Landing from "./src/components/layout/Landing";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -12,12 +13,29 @@ import Otp from "./src/components/auth/Otp";
 import Posts from "./src/components/posts/Posts";
 import ID from "./src/components/id/ID";
 import QrPhoto from "./src/components/id/QrPhoto";
-import CreateProfile from "./src/components/profile/CreateProfile";
 import { Provider as AuthProvider } from "./src/context/AuthContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import setAuthToken from "./src/utils/setAuthToken";
+import Profile from "./src/components/profile/Profile";
 
 const Stack = createStackNavigator();
 
 const App = () => {
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("token");
+      if (value !== null) {
+        setAuthToken(value);
+      }
+    } catch (err) {
+      console.log("Error", err);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <AuthProvider>
       <NavigationContainer>
@@ -38,7 +56,7 @@ const App = () => {
           <Stack.Screen name="Posts" component={Posts} />
           <Stack.Screen name="ID" component={ID} />
           <Stack.Screen name="QrPhoto" component={QrPhoto} />
-          <Stack.Screen name="CreateProfile" component={CreateProfile} />
+          <Stack.Screen name="Profile" component={Profile} />
         </Stack.Navigator>
       </NavigationContainer>
     </AuthProvider>

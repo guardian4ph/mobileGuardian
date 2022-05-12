@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Text, View, StyleSheet, SafeAreaView, StatusBar } from "react-native";
-import { input } from "react-native-elements";
 import { Feather } from "@expo/vector-icons";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
@@ -15,13 +14,25 @@ const Register = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
 
-  const onSubmit = async (e) => {
+  console.log("State", state);
+
+  const onSubmit = async () => {
     if (password !== password2) {
       console.log("Password dont match");
     } else {
-      registerUser({ name, lname, number, email, password });
+      try {
+        registerUser({ name, lname, number, email, password });
+      } catch (err) {
+        console.log(`Registration Error ${err}`);
+      }
     }
   };
+
+  useEffect(() => {
+    if (state.token) {
+      navigation.navigate("Posts");
+    }
+  }, [state.token]);
 
   return (
     <SafeAreaView style={styles.container}>

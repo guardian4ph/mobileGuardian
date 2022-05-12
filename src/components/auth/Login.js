@@ -1,13 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Text, View, StyleSheet, SafeAreaView, StatusBar } from "react-native";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, EvilIcons } from "@expo/vector-icons";
+import { Context as AuthContext } from "../../context/AuthContext";
 
 const Login = ({ navigation }) => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const { state, login } = useContext(AuthContext);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordType, setPasswordType] = useState(true);
+
+  const togglePassword = () => {
+    if (passwordType === true) {
+      setPasswordType(false);
+      return;
+    }
+    setPasswordType(true);
+  };
+
+  const onSubmit = async () => {
+    try {
+      login({ email, password });
+    } catch (err) {
+      console.log(`Login error ${err}`);
+    }
+  };
+
+  useEffect(() => {
+    if (state.token) {
+      navigation.navigate("Posts");
+    }
+  }, [state.token]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -29,18 +52,38 @@ const Login = ({ navigation }) => {
             autoCapitalize="none"
             autoCorrect={false}
             placeholderTextColor="#333"
+            value={email}
+            onChangeText={setEmail}
           />
-          <TextInput
-            style={styles.inputStyle}
-            placeholder="Password"
-            autoCapitalize="none"
-            autoCorrect={false}
-            secureTextEntry={true}
-            placeholderTextColor="#333"
-          />
+          <View style={{ position: "relative" }}>
+            <TextInput
+              style={styles.inputStyle}
+              placeholder="Password"
+              autoCapitalize="none"
+              autoCorrect={false}
+              secureTextEntry={passwordType}
+              placeholderTextColor="#333"
+              value={password}
+              onChangeText={setPassword}
+            />
+            <View
+              style={{
+                position: "absolute",
+                height: "100%",
+                right: 7,
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <TouchableOpacity onPress={togglePassword}>
+                <EvilIcons name="eye" size={24} color="#215a75" />
+              </TouchableOpacity>
+            </View>
+          </View>
 
           <TouchableOpacity
-            onPress={() => navigation.navigate("Posts")}
+            onPress={() => onSubmit()}
             style={[styles.btnView, styles.btnMain]}
           >
             <Text style={[styles.btnContent, styles.txtWhite]}>Login</Text>

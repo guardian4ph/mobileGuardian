@@ -8,10 +8,6 @@ import CustomStatusBar from "../layout/CustomStatusBar";
 import AnnouncementCarousel from "../announcement/AnnouncementCarousel";
 
 const Posts = (props) => {
-  const value = useContext(StateContext);
-
-  console.log("Value", value);
-
   return (
     <SafeAreaProvider>
       <CustomStatusBar backgroundColor="#215a75" />
