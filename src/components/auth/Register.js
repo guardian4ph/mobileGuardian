@@ -4,17 +4,16 @@ import { Feather } from "@expo/vector-icons";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import { Context as AuthContext } from "../../context/AuthContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Register = ({ navigation }) => {
-  const { state, registerUser } = useContext(AuthContext);
+  const { state, registerUser, storageLogin } = useContext(AuthContext);
   const [name, setName] = useState("");
   const [lname, setLname] = useState("");
   const [number, setNumber] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
-
-  console.log("State", state);
 
   const onSubmit = async () => {
     if (password !== password2) {
@@ -28,11 +27,29 @@ const Register = ({ navigation }) => {
     }
   };
 
+  const [token, setToken] = useState("");
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("token");
+      if (value !== null) {
+        setToken(value);
+        storageLogin();
+        navigation.navigate("Posts");
+      }
+    } catch (err) {
+      console.log("Error", err);
+    }
+  };
+
   useEffect(() => {
-    if (state.token) {
+    getData();
+  }, [token]);
+
+  useEffect(() => {
+    if (state?.token) {
       navigation.navigate("Posts");
     }
-  }, [state.token]);
+  }, [state]);
 
   return (
     <SafeAreaView style={styles.container}>

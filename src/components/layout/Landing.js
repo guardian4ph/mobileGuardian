@@ -40,7 +40,7 @@ const Landing = () => {
       const value = await AsyncStorage.getItem("token");
       if (value !== null) {
         setToken(value);
-        console.log("Token", value);
+
         navigation.navigate("Posts");
       }
     } catch (err) {

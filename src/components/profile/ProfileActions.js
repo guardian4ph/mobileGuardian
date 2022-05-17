@@ -1,19 +1,32 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
-const ProfileActions = () => {
+const ProfileActions = ({ logout }) => {
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <View style={styles.nameContainer}>
-        <View style={{ flexDirection: "row" }}>
-          <TouchableOpacity>
+        <View style={{ width: "30%" }}></View>
+        <View
+          style={{
+            flexDirection: "row",
+            width: "70%",
+            alignItems: "center",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => navigation.navigate("CreateProfile")}
+          >
             <Text style={styles.textName}>Create Profile</Text>
           </TouchableOpacity>
+
           <TouchableOpacity>
-            <Text style={styles.textName}>Education</Text>
+            <Text style={styles.textName}>Credentials</Text>
           </TouchableOpacity>
-          <TouchableOpacity>
-            <Text style={styles.textName}>Trainings</Text>
+          <TouchableOpacity onPress={logout}>
+            <Text style={styles.textName}>Log-out</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -27,13 +40,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#215a75",
+    position: "relative",
   },
   nameContainer: {
-    alignItems: "center",
-    justifyContent: "center",
+    position: "absolute",
+    flexDirection: "row",
     width: "100%",
-    alignItems: "flex-end",
-    marginRight: 20,
   },
 
   textName: {

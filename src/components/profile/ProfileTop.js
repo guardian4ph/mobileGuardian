@@ -3,7 +3,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import React from "react";
 import { Entypo } from "@expo/vector-icons";
 
-const ProfileTop = ({ navigation }) => {
+const ProfileTop = ({ state }) => {
   return (
     <View style={styles.container}>
       <Image
@@ -25,9 +25,14 @@ const ProfileTop = ({ navigation }) => {
           <Entypo name="camera" size={24} color="#ddd" />
         </View>
       </View>
-      <View style={styles.nameContainer}>
-        <Text style={styles.nameTxt}> Cloyd Dedicatoria</Text>
-      </View>
+      {state.user ? (
+        <View style={styles.nameContainer}>
+          <Text style={styles.nameTxt}>
+            {" "}
+            {state?.user.name} {state?.user.lname}
+          </Text>
+        </View>
+      ) : null}
     </View>
   );
 };

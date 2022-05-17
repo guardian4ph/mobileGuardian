@@ -13,7 +13,7 @@ const ProfileAbout = () => {
       <View style={{ width: "100%", paddingVertical: 15 }}>
         <View style={{ flexDirection: "row" }}>
           <View style={styles.iconContainer}>
-            <MaterialIcons name="work" size={24} color="#215a75" />
+            <MaterialIcons name="work" size={20} color="#3d6f86" />
           </View>
           <View style={styles.tittleContainer}>
             <Text style={styles.textVaccination}>
@@ -25,7 +25,7 @@ const ProfileAbout = () => {
 
         <View style={{ flexDirection: "row" }}>
           <View style={styles.iconContainer}>
-            <MaterialIcons name="work-outline" size={24} color="#215a75" />
+            <MaterialIcons name="work-outline" size={24} color="#3d6f86" />
           </View>
           <View style={styles.tittleContainer}>
             <Text style={styles.textVaccination}>
@@ -37,7 +37,7 @@ const ProfileAbout = () => {
 
         <View style={{ flexDirection: "row" }}>
           <View style={styles.iconContainer}>
-            <FontAwesome5 name="school" size={20} color="#215a75" />
+            <FontAwesome5 name="school" size={20} color="#3d6f86" />
           </View>
           <View style={styles.tittleContainer}>
             <Text style={styles.textVaccination}>
@@ -52,7 +52,7 @@ const ProfileAbout = () => {
 
         <View style={{ flexDirection: "row" }}>
           <View style={styles.iconContainer}>
-            <MaterialIcons name="school" size={24} color="#215a75" />
+            <MaterialIcons name="school" size={24} color="#3d6f86" />
           </View>
           <View style={styles.tittleContainer}>
             <Text style={styles.textVaccination}>
@@ -66,7 +66,7 @@ const ProfileAbout = () => {
         </View>
         <View style={{ flexDirection: "row" }}>
           <View style={styles.iconContainer}>
-            <MaterialIcons name="coronavirus" size={24} color="#215a75" />
+            <MaterialIcons name="coronavirus" size={24} color="#7498a9" />
           </View>
           <View style={styles.tittleContainer}>
             <Text style={styles.textVaccination}>
@@ -77,7 +77,7 @@ const ProfileAbout = () => {
         </View>
         <View style={{ flexDirection: "row" }}>
           <View style={styles.iconContainer}>
-            <FontAwesome name="building" size={20} color="#215a75" />
+            <FontAwesome name="building" size={20} color="#7498a9" />
           </View>
           <View style={styles.tittleContainer}>
             <Text style={styles.textVaccination}>
@@ -98,6 +98,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#fff",
     marginBottom: 2,
+    borderWidth: 1,
+    borderBottomColor: "#ddd",
   },
 
   iconContainer: {

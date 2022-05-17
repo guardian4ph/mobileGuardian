@@ -3,9 +3,10 @@ import { Text, View, StyleSheet, SafeAreaView, StatusBar } from "react-native";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons, EvilIcons } from "@expo/vector-icons";
 import { Context as AuthContext } from "../../context/AuthContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Login = ({ navigation }) => {
-  const { state, login } = useContext(AuthContext);
+  const { state, login, storageLogin } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordType, setPasswordType] = useState(true);
@@ -25,12 +26,29 @@ const Login = ({ navigation }) => {
       console.log(`Login error ${err}`);
     }
   };
+  const [token, setToken] = useState("");
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("token");
+      if (value !== null) {
+        setToken(value);
+        storageLogin();
+        navigation.navigate("Posts");
+      }
+    } catch (err) {
+      console.log("Error", err);
+    }
+  };
 
   useEffect(() => {
-    if (state.token) {
+    getData();
+  }, [token]);
+
+  useEffect(() => {
+    if (state?.token) {
       navigation.navigate("Posts");
     }
-  }, [state.token]);
+  }, [state]);
 
   return (
     <SafeAreaView style={styles.container}>

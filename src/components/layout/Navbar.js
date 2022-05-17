@@ -12,20 +12,13 @@ import {
 import { Context as AuthContext } from "../../context/AuthContext";
 
 const Navbar = (props) => {
-  const { state, logout } = useContext(AuthContext);
   const navigation = useNavigation();
-
-  useEffect(() => {
-    if (!state.token) {
-      navigation.navigate("Landing");
-    }
-  }, [state.token]);
 
   return (
     <View style={styles.container}>
       <View style={styles.subContainer}>
         <View style={styles.componentsContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate("Landing")}>
+          <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
             <Feather name="home" size={24} color="#fff" />
           </TouchableOpacity>
           <Text style={[styles.txtWhite, styles.btnContent]}>Home</Text>
@@ -49,7 +42,7 @@ const Navbar = (props) => {
           </View>
         </View>
         <View style={styles.componentsContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate("Landing")}>
+          <TouchableOpacity onPress={() => navigation.navigate("Posts")}>
             <AntDesign name="notification" size={24} color="#fff" />
           </TouchableOpacity>
           <Text style={[styles.txtWhite, styles.btnContent]}>Notification</Text>
@@ -62,10 +55,10 @@ const Navbar = (props) => {
         </View> */}
         <View style={styles.componentsContainer}>
           {/* <TouchableOpacity onPress={() => logout()}> */}
-          <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+          <TouchableOpacity onPress={() => navigation.navigate("Messages")}>
             <Ionicons name="person-circle-outline" size={24} color="#fff" />
           </TouchableOpacity>
-          <Text style={[styles.txtWhite, styles.btnContent]}>Profile</Text>
+          <Text style={[styles.txtWhite, styles.btnContent]}>Messages</Text>
         </View>
       </View>
     </View>

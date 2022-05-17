@@ -17,25 +17,12 @@ import { Provider as AuthProvider } from "./src/context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import setAuthToken from "./src/utils/setAuthToken";
 import Profile from "./src/components/profile/Profile";
+import Messages from "./src/components/messages/Messages";
+import CreateProfile from "./src/components/profileForms/CreateProfile";
 
 const Stack = createStackNavigator();
 
-const App = () => {
-  const getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem("token");
-      if (value !== null) {
-        setAuthToken(value);
-      }
-    } catch (err) {
-      console.log("Error", err);
-    }
-  };
-
-  useEffect(() => {
-    getData();
-  }, []);
-
+export default function App() {
   return (
     <AuthProvider>
       <NavigationContainer>
@@ -57,9 +44,10 @@ const App = () => {
           <Stack.Screen name="ID" component={ID} />
           <Stack.Screen name="QrPhoto" component={QrPhoto} />
           <Stack.Screen name="Profile" component={Profile} />
+          <Stack.Screen name="Messages" component={Messages} />
+          <Stack.Screen name="CreateProfile" component={CreateProfile} />
         </Stack.Navigator>
       </NavigationContainer>
     </AuthProvider>
   );
-};
-export default App;
+}

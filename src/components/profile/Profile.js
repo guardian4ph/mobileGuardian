@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import {
   Text,
   View,
@@ -6,7 +6,9 @@ import {
   StatusBar,
   SafeAreaView,
   Image,
+  ScrollView,
 } from "react-native";
+import { Context as AuthContext } from "../../context/AuthContext";
 import AppLoading from "expo-app-loading";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -25,10 +27,11 @@ import {
 import ProfileTop from "./ProfileTop";
 import ProfileActions from "./ProfileActions";
 import ProfileAbout from "./ProfileAbout";
-import ProfileEducation from "./ProfileEducation";
-import ProfileExperience from "./ProfileExperience";
+import PostItem from "../posts/PostItem";
+import AnnouncementCarousel from "../announcement/AnnouncementCarousel";
 
 const Profile = ({ navigation }) => {
+  const { state, logout } = useContext(AuthContext);
   let [fontsLoaded] = useFonts({
     Inter_300Light,
     Inter_600SemiBold,
@@ -36,6 +39,14 @@ const Profile = ({ navigation }) => {
     Inter_500Medium,
     Inter_400Regular,
   });
+
+  useEffect(() => {
+    console.log("PROFILE", state);
+    if (!state.token) {
+      navigation.navigate("Landing");
+    }
+  }, [state.token]);
+
   if (!fontsLoaded) {
     return <AppLoading />;
   } else {
@@ -47,12 +58,14 @@ const Profile = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.componentsContainer}>
-          <ProfileTop />
-          <ProfileActions />
+        <ScrollView style={styles.componentsContainer}>
+          <ProfileTop state={state} />
+          <ProfileActions logout={logout} />
           <ProfileAbout />
           {/* Show all post he reacted or commented */}
-        </View>
+          <AnnouncementCarousel />
+          <PostItem />
+        </ScrollView>
       </SafeAreaView>
     );
   }

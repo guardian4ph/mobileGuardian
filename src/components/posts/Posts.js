@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { View, StyleSheet, StatusBar } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import Navbar from "../layout/Navbar";
@@ -6,8 +6,16 @@ import PostItem from "./PostItem";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import CustomStatusBar from "../layout/CustomStatusBar";
 import AnnouncementCarousel from "../announcement/AnnouncementCarousel";
+import { Context as AuthContext } from "../../context/AuthContext";
 
 const Posts = (props) => {
+  const { state, login, loadUser } = useContext(AuthContext);
+
+  useEffect(() => {
+    loadUser();
+  }, []);
+
+  console.log("POSSTTTT State", state);
   return (
     <SafeAreaProvider>
       <CustomStatusBar backgroundColor="#215a75" />

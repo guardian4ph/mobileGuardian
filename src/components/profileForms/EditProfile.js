@@ -7,7 +7,7 @@ const EditProfile = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.backBtn}>
-        <TouchableOpacity onPress={() => navigation.navigate("Landing")}>
+        <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
           <Ionicons
             name="arrow-back-circle-outline"
             size={24}
