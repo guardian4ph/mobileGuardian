@@ -1,9 +1,16 @@
 import { View, Text, StyleSheet, Image } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { Entypo } from "@expo/vector-icons";
+import { Context as ProfileContext } from "../../context/ProfileContext";
 
-const ProfileTop = ({ state }) => {
+const ProfileTop = ({ authState }) => {
+  const { state, getCurrentProfile } = useContext(ProfileContext);
+  useEffect(() => {
+    getCurrentProfile();
+  }, []);
+
+  console.log("Profile State", state.profile.profilepic);
   return (
     <View style={styles.container}>
       <Image
@@ -16,20 +23,29 @@ const ProfileTop = ({ state }) => {
 
       <View style={styles.photoContainer}>
         <View style={{ position: "relative" }}>
-          <Image
-            style={styles.profileImage}
-            source={require("../../../assets/img/Profile/profile.jpg")}
-          />
+          {state ? (
+            <Image
+              style={styles.profileImage}
+              source={{
+                uri: `http://10.128.50.114:5000/${state.profile.profilepic}`,
+              }}
+            />
+          ) : (
+            <Image
+              style={styles.profileImage}
+              source={require("../../../assets/img/Profile/profile.jpg")}
+            />
+          )}
         </View>
         <View style={{ position: "absolute", right: 20, bottom: 12 }}>
           <Entypo name="camera" size={24} color="#ddd" />
         </View>
       </View>
-      {state.user ? (
+      {authState?.user ? (
         <View style={styles.nameContainer}>
           <Text style={styles.nameTxt}>
             {" "}
-            {state?.user.name} {state?.user.lname}
+            {authState?.user.name} {authState?.user.lname}
           </Text>
         </View>
       ) : null}

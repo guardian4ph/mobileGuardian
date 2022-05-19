@@ -99,6 +99,7 @@ const Register = ({ navigation }) => {
             placeholder="09XXXXXXXXX"
             value={number}
             autoCapitalize="none"
+            keyboardType="phone-pad"
             autoCorrect={false}
             placeholderTextColor="#333"
             onChangeText={setNumber}
@@ -116,6 +117,7 @@ const Register = ({ navigation }) => {
             autoCapitalize="none"
             autoCorrect={false}
             placeholderTextColor="#333"
+            keyboardType="email-address"
             onChangeText={setEmail}
           ></TextInput>
           <TextInput

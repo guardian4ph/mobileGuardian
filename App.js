@@ -14,8 +14,8 @@ import Posts from "./src/components/posts/Posts";
 import ID from "./src/components/id/ID";
 import QrPhoto from "./src/components/id/QrPhoto";
 import { Provider as AuthProvider } from "./src/context/AuthContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import setAuthToken from "./src/utils/setAuthToken";
+import { Provider as ProfileProvider } from "./src/context/ProfileContext";
+
 import Profile from "./src/components/profile/Profile";
 import Messages from "./src/components/messages/Messages";
 import CreateProfile from "./src/components/profileForms/CreateProfile";
@@ -24,30 +24,32 @@ const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <AuthProvider>
-      <NavigationContainer>
-        <Stack.Navigator
-          screenOptions={{
-            headerShown: false,
-          }}
-          initialRouteName={"Landing"}
-        >
-          <Stack.Screen name="Landing" component={Landing} />
-          <Stack.Screen name="IncidentModal" component={IncidentModal} />
-          <Stack.Screen name="Register" component={Register} />
-          <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="Privacy" component={Privacy} />
-          <Stack.Screen name="Terms" component={Terms} />
-          <Stack.Screen name="ForgotPass" component={ForgotPass} />
-          <Stack.Screen name="Otp" component={Otp} />
-          <Stack.Screen name="Posts" component={Posts} />
-          <Stack.Screen name="ID" component={ID} />
-          <Stack.Screen name="QrPhoto" component={QrPhoto} />
-          <Stack.Screen name="Profile" component={Profile} />
-          <Stack.Screen name="Messages" component={Messages} />
-          <Stack.Screen name="CreateProfile" component={CreateProfile} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </AuthProvider>
+    <ProfileProvider>
+      <AuthProvider>
+        <NavigationContainer>
+          <Stack.Navigator
+            screenOptions={{
+              headerShown: false,
+            }}
+            initialRouteName={"Landing"}
+          >
+            <Stack.Screen name="Landing" component={Landing} />
+            <Stack.Screen name="IncidentModal" component={IncidentModal} />
+            <Stack.Screen name="Register" component={Register} />
+            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="Privacy" component={Privacy} />
+            <Stack.Screen name="Terms" component={Terms} />
+            <Stack.Screen name="ForgotPass" component={ForgotPass} />
+            <Stack.Screen name="Otp" component={Otp} />
+            <Stack.Screen name="Posts" component={Posts} />
+            <Stack.Screen name="ID" component={ID} />
+            <Stack.Screen name="QrPhoto" component={QrPhoto} />
+            <Stack.Screen name="Profile" component={Profile} />
+            <Stack.Screen name="Messages" component={Messages} />
+            <Stack.Screen name="CreateProfile" component={CreateProfile} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </AuthProvider>
+    </ProfileProvider>
   );
 }

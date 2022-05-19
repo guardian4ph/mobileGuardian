@@ -3,6 +3,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import setAuthToken from "../utils/setAuthToken";
 import axios from "axios";
 
+const serverURI = process.env.API_BASEURL;
+
 const authReducer = (state, action) => {
   switch (action.type) {
     case "add_error":
@@ -46,6 +48,7 @@ const loadUser = (dispatch) => {
       setAuthToken(token);
     }
     try {
+      // const res = await axios.get(`${serverURI}/auth`);
       const res = await axios.get("http://10.128.50.114:5000/api/auth");
       dispatch({ type: "load_user", payload: res.data });
     } catch (err) {

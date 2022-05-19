@@ -34,12 +34,9 @@ const ProfileImage = ({ setFilePath }) => {
     if (!result.cancelled) {
       setImageUri(result.uri);
       //pass this to Parent Component
-      setFilePath(result.uri);
-      console.log("File Details", result);
+      setFilePath(result);
     }
   };
-
-  //   console.log("Image Selected", imageUri);
 
   return (
     <View style={styles.container}>

@@ -1,15 +1,7 @@
-import React, { useContext, useEffect } from "react";
+import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Image, Text, View, StyleSheet, TouchableOpacity } from "react-native";
-import {
-  Ionicons,
-  Feather,
-  FontAwesome,
-  MaterialIcons,
-  AntDesign,
-  MaterialCommunityIcons,
-} from "@expo/vector-icons";
-import { Context as AuthContext } from "../../context/AuthContext";
+import { Ionicons, Feather, FontAwesome, AntDesign } from "@expo/vector-icons";
 
 const Navbar = (props) => {
   const navigation = useNavigation();
@@ -91,7 +83,7 @@ const styles = StyleSheet.create({
   },
   guardianIconContainer: {
     position: "absolute",
-    top: -50,
+    top: Platform.OS === "android" ? -60 : -50,
     width: 100,
     alignItems: "center",
     justifyContent: "center",

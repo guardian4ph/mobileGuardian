@@ -32,6 +32,7 @@ import AnnouncementCarousel from "../announcement/AnnouncementCarousel";
 
 const Profile = ({ navigation }) => {
   const { state, logout } = useContext(AuthContext);
+
   let [fontsLoaded] = useFonts({
     Inter_300Light,
     Inter_600SemiBold,
@@ -41,7 +42,6 @@ const Profile = ({ navigation }) => {
   });
 
   useEffect(() => {
-    console.log("PROFILE", state);
     if (!state.token) {
       navigation.navigate("Landing");
     }
@@ -59,7 +59,7 @@ const Profile = ({ navigation }) => {
         </View>
 
         <ScrollView style={styles.componentsContainer}>
-          <ProfileTop state={state} />
+          <ProfileTop authState={state} />
           <ProfileActions logout={logout} />
           <ProfileAbout />
           {/* Show all post he reacted or commented */}

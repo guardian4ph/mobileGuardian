@@ -24,6 +24,13 @@ const profileReducer = (state, action) => {
     case "add_error":
       return { ...state, error: action.payload };
 
+    case "createProfile":
+      return {
+        ...state,
+        profile: action.payload,
+        loading: false,
+      };
+
     default:
       return state;
   }
@@ -33,6 +40,7 @@ const getCurrentProfile = (dispatch) => async () => {
   try {
     const res = await axios.get("http://10.128.50.114:5000/api/profile/me");
     dispatch({ type: "getCurrentProfile", payload: res.data });
+    console.log("Get Gurrent Profile Response ", res.data);
   } catch (err) {
     const errors = err.response.data.errors;
     if (errors) {
@@ -119,7 +127,9 @@ const clearProfileCRUD = (dispatch) => async () => {
 
 const getProfileByIncidentUserId = (dispatch) => async () => {
   try {
-    const res = await axios.get(`/api/profile/user/${userId}`);
+    const res = await axios.get(
+      `http://10.128.50.114:5000/api/profile/user/${userId}`
+    );
     dispatch({
       type: "getProfileByIncidentUserId",
       payload: res.data,
@@ -136,6 +146,35 @@ const getProfileByIncidentUserId = (dispatch) => async () => {
     }
   }
 };
+const createProfile =
+  (dispatch) =>
+  async (formData, edit = false) => {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+
+      const res = await axios.post(
+        "http://10.128.50.114:5000/api/profile",
+        formData
+      );
+      console.log("Profile", res.data);
+      dispatch({ type: "createProfile", payload: res.data });
+      // dispatch(setAlert(edit ? "Profile Updated" : "Profile Created", "success"));
+    } catch (err) {
+      const errors = err.response.data.errors;
+      if (errors) {
+        errors.forEach((error) =>
+          dispatch({
+            type: "add_error",
+            payload: `${error.msg}`,
+          })
+        );
+      }
+    }
+  };
 export const { Provider, Context } = createDataContext(
   profileReducer,
   {
@@ -145,6 +184,7 @@ export const { Provider, Context } = createDataContext(
     getProfileCRUD,
     clearProfileCRUD,
     getProfileByIncidentUserId,
+    createProfile,
   },
   {
     profile: null,

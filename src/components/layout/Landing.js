@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   View,
   StyleSheet,
@@ -22,9 +22,12 @@ import {
   Inter_800ExtraBold,
   Inter_900Black,
 } from "@expo-google-fonts/inter";
+import { Context as AuthContext } from "../../context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Landing = () => {
+  const { state, storageLogin } = useContext(AuthContext);
+
   let [fontsLoaded] = useFonts({
     Inter_300Light,
     Inter_600SemiBold,
@@ -40,7 +43,7 @@ const Landing = () => {
       const value = await AsyncStorage.getItem("token");
       if (value !== null) {
         setToken(value);
-
+        storageLogin();
         navigation.navigate("Posts");
       }
     } catch (err) {
@@ -51,6 +54,11 @@ const Landing = () => {
   useEffect(() => {
     getData();
   }, [token]);
+  useEffect(() => {
+    if (state?.token) {
+      navigation.navigate("Posts");
+    }
+  }, [state]);
 
   if (!fontsLoaded) {
     return <AppLoading />;

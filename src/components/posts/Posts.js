@@ -15,7 +15,6 @@ const Posts = (props) => {
     loadUser();
   }, []);
 
-  console.log("POSSTTTT State", state);
   return (
     <SafeAreaProvider>
       <CustomStatusBar backgroundColor="#215a75" />

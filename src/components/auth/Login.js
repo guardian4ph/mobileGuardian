@@ -71,6 +71,7 @@ const Login = ({ navigation }) => {
             autoCorrect={false}
             placeholderTextColor="#333"
             value={email}
+            keyboardType="email-address"
             onChangeText={setEmail}
           />
           <View style={{ position: "relative" }}>
