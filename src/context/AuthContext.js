@@ -9,12 +9,14 @@ const authReducer = (state, action) => {
   switch (action.type) {
     case "add_error":
       return { ...state, errorMessage: action.payload };
+    case "remove_error":
+      return { ...state, errorMessage: "" };
     case "register_user":
       return { errorMessage: "", isAuthenticated: true, token: action.payload };
     case "storageLogin":
-      return { ...state, token: action.payload };
+      return { ...state, token: action.payload, loading: false };
     case "load_user":
-      return { ...state, user: action.payload };
+      return { ...state, user: action.payload, loading: false };
     case "logout":
       return {
         token: null,
@@ -78,7 +80,7 @@ const registerUser =
         errors.forEach((error) =>
           dispatch({
             type: "add_error",
-            payload: `${error.msg}`,
+            payload: error.msg,
           })
         );
       }
@@ -99,6 +101,7 @@ const login =
       dispatch(loadUser());
     } catch (err) {
       const errors = err.response.data.errors;
+      console.log(errors);
       if (errors) {
         errors.forEach((error) =>
           dispatch({
@@ -123,6 +126,18 @@ const logout = (dispatch) => {
   };
 };
 
+const remove_error = (dispatch) => {
+  return async () => {
+    try {
+      await AsyncStorage.removeItem("token");
+
+      dispatch({ type: "remove_error" });
+      console.log("Error Removed");
+    } catch (err) {
+      console.log(" Error Removed Success");
+    }
+  };
+};
 const storageLogin = (dispatch) => {
   return async () => {
     try {
@@ -144,7 +159,7 @@ const storageLogin = (dispatch) => {
 
 export const { Provider, Context } = createDataContext(
   authReducer,
-  { registerUser, login, logout, loadUser, storageLogin },
+  { registerUser, login, logout, loadUser, storageLogin, remove_error },
   {
     token: null,
     isAuthenticated: null,

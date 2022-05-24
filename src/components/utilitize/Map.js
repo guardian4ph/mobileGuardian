@@ -1,15 +1,8 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
+import { View, StyleSheet, Image } from "react-native";
 import React, { useRef, useState, useEffect } from "react";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
-import AppLoading from "expo-app-loading";
 import Geocoder from "react-native-geocoding";
+import Spinner from "../layout/Spinner";
 
 const Map = ({ location, setNameAddress }) => {
   Geocoder.init(process.env.GOOGLE_MAPS_API_KEY);
@@ -79,7 +72,7 @@ const Map = ({ location, setNameAddress }) => {
           area = getArea(addressArray);
 
         setNameAddress({
-          completeaddress: address,
+          completeaddress: address ? address : "",
           city: city ? city : "",
           area: area ? area : "",
           state: state ? state : "",
@@ -91,7 +84,7 @@ const Map = ({ location, setNameAddress }) => {
   }, [region]);
 
   if (!location) {
-    return <AppLoading />;
+    return <Spinner />;
   } else {
     return (
       <View style={styles.container}>

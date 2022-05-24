@@ -7,7 +7,7 @@ import {
   SafeAreaView,
   Image,
 } from "react-native";
-import AppLoading from "expo-app-loading";
+
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import {
@@ -22,6 +22,7 @@ import {
   Inter_800ExtraBold,
   Inter_900Black,
 } from "@expo-google-fonts/inter";
+import Spinner from "../layout/Spinner";
 
 const ID = (props) => {
   let [fontsLoaded] = useFonts({
@@ -32,7 +33,7 @@ const ID = (props) => {
     Inter_400Regular,
   });
   if (!fontsLoaded) {
-    return <AppLoading />;
+    return <Spinner />;
   } else {
     return (
       <SafeAreaView style={styles.container}>

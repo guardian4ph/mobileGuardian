@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { Context as ProfileContext } from "../../context/ProfileContext";
 
 const ProfileActions = ({ logout }) => {
+  const { state } = useContext(ProfileContext);
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
@@ -16,14 +18,22 @@ const ProfileActions = ({ logout }) => {
             justifyContent: "space-evenly",
           }}
         >
-          <TouchableOpacity
-            onPress={() => navigation.navigate("CreateProfile")}
-          >
-            <Text style={styles.textName}>Create Profile</Text>
-          </TouchableOpacity>
+          {state.profile ? (
+            <TouchableOpacity
+              onPress={() => navigation.navigate("EditProfile")}
+            >
+              <Text style={styles.textName}>Edit Profile</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              onPress={() => navigation.navigate("CreateProfile")}
+            >
+              <Text style={styles.textName}>Create Profile</Text>
+            </TouchableOpacity>
+          )}
 
           <TouchableOpacity>
-            <Text style={styles.textName}>Credentials</Text>
+            <Text style={styles.textName}>Settings</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={logout}>
             <Text style={styles.textName}>Log-out</Text>

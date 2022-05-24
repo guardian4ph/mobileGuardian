@@ -1,7 +1,14 @@
 // import "../../_mockLocation";
 import React, { useState, useEffect, useContext } from "react";
-import { Text, View, StyleSheet, SafeAreaView, StatusBar } from "react-native";
-
+import {
+  Text,
+  View,
+  StyleSheet,
+  SafeAreaView,
+  StatusBar,
+  KeyboardAvoidingView,
+} from "react-native";
+import moment from "moment";
 import { Feather } from "@expo/vector-icons";
 import {
   FlatList,
@@ -17,7 +24,7 @@ import DatePicker from "react-native-modern-datepicker";
 import { Context as ProfileContext } from "../../context/ProfileContext";
 
 const CreateProfile = ({ navigation }) => {
-  const { stateProfile, createProfile } = useContext(ProfileContext);
+  const { createProfile } = useContext(ProfileContext);
   const [mapSize, setMapSize] = useState(true);
   const [open, setOpen] = useState(false);
   const [fileExtension, setfileExtension] = useState();
@@ -98,9 +105,7 @@ const CreateProfile = ({ navigation }) => {
         setErrorMsg("Permission to access location was denied");
         return;
       }
-
       let location = await Location.getCurrentPositionAsync({});
-      let address = await Location.reverseGeocodeAsync(location.coords);
       setLocation(location);
     })();
   }, []);
@@ -141,184 +146,191 @@ const CreateProfile = ({ navigation }) => {
   };
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.backBtn}>
-        <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
-          <Ionicons
-            name="arrow-back-circle-outline"
-            size={24}
-            color="#215a75"
-          />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.subContainer}>
-        {/* {err ? <Text> {`Error ${err}`}</Text> : null} */}
-        <FlatList
-          ListHeaderComponent={
-            <View style={{ alignItems: "center" }}>
-              <View style={styles.componentsContainer}>
-                <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    paddingTop: 20,
-                  }}
-                >
-                  <Feather name="user" size={24} color="#215a75" />
-                  <Text style={styles.txtMain}>Create Your Profile</Text>
-                </View>
-                {/* Photo Profile */}
-                <ProfileImage setFilePath={setFilePath} />
-                <TextInput
-                  style={styles.inputStyle}
-                  placeholder="Address"
-                  autoCapitalize="none"
-                  value={nameAddress.completeaddress}
-                  autoCorrect={false}
-                  placeholderTextColor="#333"
-                ></TextInput>
-                {/* Map Here ---------------------------------- */}
-                {location && (
-                  <View
-                    style={
-                      mapSize ? styles.mapContainer : styles.mapContainerLarge
-                    }
-                  >
-                    <View
-                      style={{
-                        position: "absolute",
-                        top: 10,
-                        right: 10,
-                        zIndex: 10,
-                      }}
-                    >
-                      <TouchableOpacity onPress={toggleMap}>
-                        <MaterialIcons
-                          name="fullscreen"
-                          size={30}
-                          color="#215a75"
-                        />
-                      </TouchableOpacity>
-                    </View>
-
-                    <Map location={location} setNameAddress={setNameAddress} />
-                  </View>
-                )}
-                <DropDownPicker
-                  style={{
-                    borderColor: "#ddd",
-                    marginVertical: 5,
-                  }}
-                  zIndex={3000}
-                  zIndexInverse={1000}
-                  placeholder="Choose gender"
-                  open={open}
-                  value={gender}
-                  items={genderItems}
-                  setOpen={setOpen}
-                  setValue={setGender}
-                  setItems={setGenderItems}
-                />
-                <DropDownPicker
-                  style={{
-                    borderColor: "#ddd",
-                    marginVertical: 5,
-                  }}
-                  zIndex={2000}
-                  zIndexInverse={2000}
-                  placeholder="Choose civil status"
-                  open={statusOpen}
-                  value={civilstatus}
-                  items={statusItems}
-                  setOpen={setStatusOpen}
-                  setValue={setCivilStatus}
-                  setItems={setStatusItems}
-                />
-
-                {/* DATE HERE                        -------- > */}
-                <TouchableOpacity
-                  onPress={() => showDatePicker()}
-                  style={[
-                    styles.btnView,
-                    {
-                      backgroundColor: "#215a75",
-                      flexDirection: "row",
-                      height: 45,
-                      width: "100%",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    },
-                  ]}
-                >
-                  <Ionicons
-                    style={{ textAlign: "right" }}
-                    name="calendar"
-                    size={24}
-                    color="#fff"
-                  />
-                  <Text style={styles.txtWhite}> Birthday</Text>
-                </TouchableOpacity>
-                {showDate && (
-                  <DatePicker
-                    options={{
-                      // backgroundColor: "#090C08",
-                      textHeaderColor: "#215a75",
-                      // textDefaultColor: "#F6E7C1",
-                      selectedTextColor: "#215a75",
-                      // mainColor: "#F4722B",
-                      // textSecondaryColor: "#D6C7A1",
-                      // borderColor: "rgba(122, 146, 165, 0.1)",
-                    }}
-                    date={birthday}
-                    onDateChange={(date) => setBirthday(date)}
-                    mode="calendar"
-                  />
-                )}
-
-                <TextInput
-                  style={styles.inputStyle}
-                  placeholder="Contact Person"
-                  value={contactperson}
-                  autoCapitalize="words"
-                  autoCorrect={false}
-                  placeholderTextColor="#333"
-                  onChangeText={setContactPerson}
-                ></TextInput>
-                <TextInput
-                  style={styles.inputStyle}
-                  placeholder="09XXXXXXXXX"
-                  value={contactnumber}
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  placeholderTextColor="#333"
-                  keyboardType="phone-pad"
-                  onChangeText={setContactNumber}
-                ></TextInput>
-                <DropDownPicker
-                  style={{ borderColor: "#ddd", marginTop: 5, zIndex: 5 }}
-                  placeholder="Choose blood type"
-                  open={bloodOpen}
-                  value={bloodtype}
-                  items={bloodItems}
-                  setOpen={setBloodOpen}
-                  setValue={setBloodType}
-                  setItems={setBloodItems}
-                />
-              </View>
-            </View>
-          }
-        />
-        <View style={{ alignItems: "center", justifyContent: "center" }}>
-          <TouchableOpacity
-            style={[styles.btnView, styles.btnMain]}
-            onPress={() => onSubmit()}
-          >
-            <Text style={[styles.btnContent, styles.txtWhite]}>
-              CreateProfile
-            </Text>
+      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : null}>
+        <View style={styles.backBtn}>
+          <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+            <Ionicons
+              name="arrow-back-circle-outline"
+              size={24}
+              color="#215a75"
+            />
           </TouchableOpacity>
         </View>
-      </View>
+        <View style={styles.subContainer}>
+          {/* {err ? <Text> {`Error ${err}`}</Text> : null} */}
+          <FlatList
+            ListHeaderComponent={
+              <View style={{ alignItems: "center" }}>
+                <View style={styles.componentsContainer}>
+                  <View
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      paddingTop: 20,
+                    }}
+                  >
+                    <Feather name="user" size={24} color="#215a75" />
+                    <Text style={styles.txtMain}>Create Your Profile</Text>
+                  </View>
+                  {/* Photo Profile */}
+                  <ProfileImage setFilePath={setFilePath} />
+                  <TextInput
+                    style={styles.inputStyle}
+                    placeholder="Address"
+                    autoCapitalize="none"
+                    value={nameAddress.completeaddress}
+                    autoCorrect={false}
+                    placeholderTextColor="#333"
+                  ></TextInput>
+                  {/* Map Here ---------------------------------- */}
+                  {location && (
+                    <View
+                      style={
+                        mapSize ? styles.mapContainer : styles.mapContainerLarge
+                      }
+                    >
+                      <View
+                        style={{
+                          position: "absolute",
+                          top: 10,
+                          right: 10,
+                          zIndex: 10,
+                        }}
+                      >
+                        <TouchableOpacity onPress={toggleMap}>
+                          <MaterialIcons
+                            name="fullscreen"
+                            size={30}
+                            color="#215a75"
+                          />
+                        </TouchableOpacity>
+                      </View>
+
+                      <Map
+                        location={location}
+                        setNameAddress={setNameAddress}
+                      />
+                    </View>
+                  )}
+                  <DropDownPicker
+                    style={{
+                      borderColor: "#ddd",
+                      marginVertical: 5,
+                    }}
+                    zIndex={3000}
+                    zIndexInverse={1000}
+                    placeholder="Choose gender"
+                    open={open}
+                    value={gender}
+                    items={genderItems}
+                    setOpen={setOpen}
+                    setValue={setGender}
+                    setItems={setGenderItems}
+                  />
+                  <DropDownPicker
+                    style={{
+                      borderColor: "#ddd",
+                      marginVertical: 5,
+                    }}
+                    zIndex={2000}
+                    zIndexInverse={2000}
+                    placeholder="Choose civil status"
+                    open={statusOpen}
+                    value={civilstatus}
+                    items={statusItems}
+                    setOpen={setStatusOpen}
+                    setValue={setCivilStatus}
+                    setItems={setStatusItems}
+                  />
+
+                  {/* DATE HERE                        -------- > */}
+                  <TouchableOpacity
+                    onPress={() => showDatePicker()}
+                    style={[
+                      styles.btnView,
+                      {
+                        backgroundColor: "#215a75",
+                        flexDirection: "row",
+                        height: 45,
+                        width: "100%",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      },
+                    ]}
+                  >
+                    <Ionicons
+                      style={{ textAlign: "right" }}
+                      name="calendar"
+                      size={24}
+                      color="#fff"
+                    />
+                    <Text style={styles.txtWhite}>
+                      ( Birthday {moment(birthday).format("MM-DD-YYYY")} )
+                    </Text>
+                  </TouchableOpacity>
+                  {showDate && (
+                    <DatePicker
+                      options={{
+                        // backgroundColor: "#090C08",
+                        textHeaderColor: "#215a75",
+                        // textDefaultColor: "#F6E7C1",
+                        selectedTextColor: "#215a75",
+                        // mainColor: "#F4722B",
+                        // textSecondaryColor: "#D6C7A1",
+                        // borderColor: "rgba(122, 146, 165, 0.1)",
+                      }}
+                      date={birthday}
+                      onDateChange={(date) => setBirthday(date)}
+                      mode="calendar"
+                    />
+                  )}
+
+                  <TextInput
+                    style={styles.inputStyle}
+                    placeholder="Contact Person"
+                    value={contactperson}
+                    autoCapitalize="words"
+                    autoCorrect={false}
+                    placeholderTextColor="#333"
+                    onChangeText={setContactPerson}
+                  ></TextInput>
+                  <TextInput
+                    style={styles.inputStyle}
+                    placeholder="09XXXXXXXXX"
+                    value={contactnumber}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    placeholderTextColor="#333"
+                    keyboardType="phone-pad"
+                    onChangeText={setContactNumber}
+                  ></TextInput>
+                  <DropDownPicker
+                    style={{ borderColor: "#ddd", marginTop: 5, zIndex: 5 }}
+                    placeholder="Choose blood type"
+                    open={bloodOpen}
+                    value={bloodtype}
+                    items={bloodItems}
+                    setOpen={setBloodOpen}
+                    setValue={setBloodType}
+                    setItems={setBloodItems}
+                  />
+                </View>
+              </View>
+            }
+          />
+          <View style={{ alignItems: "center", justifyContent: "center" }}>
+            <TouchableOpacity
+              style={[styles.btnView, styles.btnMain]}
+              onPress={() => onSubmit()}
+            >
+              <Text style={[styles.btnContent, styles.txtWhite]}>
+                Create Profile
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

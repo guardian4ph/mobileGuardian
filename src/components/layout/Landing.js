@@ -8,7 +8,6 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import AppLoading from "expo-app-loading";
 import { Comfortaa_500Medium } from "@expo-google-fonts/comfortaa";
 import {
   useFonts,
@@ -24,9 +23,10 @@ import {
 } from "@expo-google-fonts/inter";
 import { Context as AuthContext } from "../../context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Spinner from "./Spinner";
 
 const Landing = () => {
-  const { state, storageLogin } = useContext(AuthContext);
+  const { state, loadUser, storageLogin } = useContext(AuthContext);
 
   let [fontsLoaded] = useFonts({
     Inter_300Light,
@@ -44,6 +44,7 @@ const Landing = () => {
       if (value !== null) {
         setToken(value);
         storageLogin();
+        loadUser();
         navigation.navigate("Posts");
       }
     } catch (err) {
@@ -53,6 +54,7 @@ const Landing = () => {
 
   useEffect(() => {
     getData();
+    loadUser();
   }, [token]);
   useEffect(() => {
     if (state?.token) {
@@ -61,7 +63,7 @@ const Landing = () => {
   }, [state]);
 
   if (!fontsLoaded) {
-    return <AppLoading />;
+    return <Spinner />;
   } else {
     return (
       <View style={[styles.darkOverlay, styles.wrapper]}>

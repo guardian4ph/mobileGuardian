@@ -8,7 +8,7 @@ import {
   StatusBar,
   Image,
 } from "react-native";
-import AppLoading from "expo-app-loading";
+
 import { Ionicons } from "@expo/vector-icons";
 import {
   useFonts,
@@ -23,6 +23,7 @@ import {
   Inter_900Black,
 } from "@expo-google-fonts/inter";
 import QRCode from "react-native-qrcode-svg";
+import Spinner from "../layout/Spinner";
 
 const QrPhoto = (props) => {
   let [fontsLoaded] = useFonts({
@@ -34,68 +35,72 @@ const QrPhoto = (props) => {
   });
 
   let logo = require("../../../assets/logos/mandaue.png");
-  return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.backBtn}>
-        <TouchableOpacity onPress={() => props.navigation.navigate("ID")}>
-          <Ionicons
-            name="arrow-back-circle-outline"
-            size={30}
-            color="#215a75"
-          />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.idContainer}>
-        <View style={styles.idHolder}></View>
-        <View style={styles.componentsContainer}>
-          <View style={styles.QRContainer}>
-            <TouchableOpacity onPress={() => props.navigation.navigate("ID")}>
-              <QRCode
-                size={350}
-                value="https://guardian.ph"
-                // logoSize={50}
-                // logo={logo}
-                // logoBackgroundColor="transparent"
-              />
-            </TouchableOpacity>
-            <Text style={{ color: "#aaa", paddingTop: 12 }}>BACK TO ID</Text>
-          </View>
-          <View style={styles.nameContainer}>
-            <View style={{ flexDirection: "row" }}>
-              <Text style={styles.textName}>Luis Ben Cluade </Text>
-              <Text style={styles.textName}> Dedicatoria</Text>
+  if (!fontsLoaded) {
+    return <Spinner />;
+  } else {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.backBtn}>
+          <TouchableOpacity onPress={() => props.navigation.navigate("ID")}>
+            <Ionicons
+              name="arrow-back-circle-outline"
+              size={30}
+              color="#215a75"
+            />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.idContainer}>
+          <View style={styles.idHolder}></View>
+          <View style={styles.componentsContainer}>
+            <View style={styles.QRContainer}>
+              <TouchableOpacity onPress={() => props.navigation.navigate("ID")}>
+                <QRCode
+                  size={350}
+                  value="https://guardian.ph"
+                  // logoSize={50}
+                  // logo={logo}
+                  // logoBackgroundColor="transparent"
+                />
+              </TouchableOpacity>
+              <Text style={{ color: "#aaa", paddingTop: 12 }}>BACK TO ID</Text>
             </View>
-            <View>
-              <Text style={{ color: "#aaa", paddingTop: 10 }}>
-                COMPLETE NAME
-              </Text>
+            <View style={styles.nameContainer}>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.textName}>Luis Ben Cluade </Text>
+                <Text style={styles.textName}> Dedicatoria</Text>
+              </View>
+              <View>
+                <Text style={{ color: "#aaa", paddingTop: 10 }}>
+                  COMPLETE NAME
+                </Text>
+              </View>
             </View>
-          </View>
 
-          <View style={styles.vaccinationContainer}>
-            <TouchableOpacity>
-              <Text style={styles.textVaccination}>
-                NO COVID VACCINATION DATA
-              </Text>
-              <Text style={styles.textVaccination}>(Tap and fill-up)</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.operationAddress}>
-            <View style={styles.alignDetails}>
-              <Text numberOfLines={1} style={styles.textAddress}>
-                1797 Sitio San Miguel, Apas, Cebu City, Cebu
-              </Text>
-
-              <Text style={{ color: "#aaa" }}>ADDRESS</Text>
+            <View style={styles.vaccinationContainer}>
+              <TouchableOpacity>
+                <Text style={styles.textVaccination}>
+                  NO COVID VACCINATION DATA
+                </Text>
+                <Text style={styles.textVaccination}>(Tap and fill-up)</Text>
+              </TouchableOpacity>
             </View>
-          </View>
-          <View style={styles.validityContainer}>
-            <Text style={{ color: "#fff" }}>VALID UNTIL REVOKED</Text>
+            <View style={styles.operationAddress}>
+              <View style={styles.alignDetails}>
+                <Text numberOfLines={1} style={styles.textAddress}>
+                  1797 Sitio San Miguel, Apas, Cebu City, Cebu
+                </Text>
+
+                <Text style={{ color: "#aaa" }}>ADDRESS</Text>
+              </View>
+            </View>
+            <View style={styles.validityContainer}>
+              <Text style={{ color: "#fff" }}>VALID UNTIL REVOKED</Text>
+            </View>
           </View>
         </View>
-      </View>
-    </SafeAreaView>
-  );
+      </SafeAreaView>
+    );
+  }
 };
 
 const styles = StyleSheet.create({

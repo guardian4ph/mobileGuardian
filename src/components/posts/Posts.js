@@ -1,38 +1,57 @@
-import React, { useContext, useEffect } from "react";
-import { View, StyleSheet, StatusBar } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import React, { useContext, useEffect, useState } from "react";
+import { StyleSheet, StatusBar, ScrollView, FlatList } from "react-native";
+
 import Navbar from "../layout/Navbar";
 import PostItem from "./PostItem";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import CustomStatusBar from "../layout/CustomStatusBar";
 import AnnouncementCarousel from "../announcement/AnnouncementCarousel";
 import { Context as AuthContext } from "../../context/AuthContext";
+import { Context as PostContext } from "../../context/PostContext";
+import Spinner from "../layout/Spinner";
+import Annoucement from "../announcement/Annoucement";
 
-const Posts = (props) => {
-  const { state, login, loadUser } = useContext(AuthContext);
+const Posts = () => {
+  const {
+    state: { posts, loading },
+    getPosts,
+  } = useContext(PostContext);
 
   useEffect(() => {
-    loadUser();
+    getPosts();
   }, []);
 
-  return (
-    <SafeAreaProvider>
-      <CustomStatusBar backgroundColor="#215a75" />
-      <ScrollView
-        showsHorizontalScrollIndicator={false}
-        style={styles.viewContainer}
-      >
-        <AnnouncementCarousel />
-        <PostItem />
-        <PostItem />
-        <PostItem />
-        <PostItem />
-        <PostItem />
-        <PostItem />
-      </ScrollView>
-      <Navbar />
-    </SafeAreaProvider>
-  );
+  const getmore = () => {
+    getPosts(posts.length);
+  };
+
+  // const [state, setState] = useState();
+
+  if (loading) {
+    return <Spinner />;
+  } else {
+    return (
+      <SafeAreaProvider>
+        <CustomStatusBar backgroundColor="#215a75" />
+        <FlatList
+          ListHeaderComponent={
+            <>
+              <Annoucement />
+              <AnnouncementCarousel />
+            </>
+          }
+          onEndReached={getmore}
+          data={posts}
+          renderItem={({ item }) => <PostItem post={item} />}
+          showsVerticalScrollIndicator={false}
+          keyExtractor={(item, index) => String(index)}
+          key={posts._id}
+        />
+
+        <Navbar />
+      </SafeAreaProvider>
+    );
+  }
 };
 
 const styles = StyleSheet.create({

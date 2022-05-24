@@ -1,15 +1,14 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
-  Text,
+  ActivityIndicator,
   View,
   StyleSheet,
   StatusBar,
   SafeAreaView,
-  Image,
   ScrollView,
+  FlatList,
 } from "react-native";
 import { Context as AuthContext } from "../../context/AuthContext";
-import AppLoading from "expo-app-loading";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import {
@@ -29,8 +28,16 @@ import ProfileActions from "./ProfileActions";
 import ProfileAbout from "./ProfileAbout";
 import PostItem from "../posts/PostItem";
 import AnnouncementCarousel from "../announcement/AnnouncementCarousel";
+import Spinner from "../layout/Spinner";
+import Navbar from "../layout/Navbar";
+import { Context as PostContext } from "../../context/PostContext";
 
 const Profile = ({ navigation }) => {
+  const {
+    state: { posts, loading },
+    getPosts,
+  } = useContext(PostContext);
+
   const { state, logout } = useContext(AuthContext);
 
   let [fontsLoaded] = useFonts({
@@ -42,30 +49,44 @@ const Profile = ({ navigation }) => {
   });
 
   useEffect(() => {
+    getPosts();
+  }, []);
+
+  useEffect(() => {
     if (!state.token) {
       navigation.navigate("Landing");
     }
   }, [state.token]);
+  const getmore = () => {
+    getPosts(posts.length);
+  };
 
-  if (!fontsLoaded) {
-    return <AppLoading />;
+  if (!fontsLoaded && state.loading) {
+    return <Spinner />;
   } else {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.backBtn}>
-          <TouchableOpacity onPress={() => navigation.navigate("Posts")}>
-            <Ionicons name="arrow-back-circle-outline" size={30} color="#fff" />
-          </TouchableOpacity>
-        </View>
+        <FlatList
+          style={styles.componentsContainer}
+          ListHeaderComponent={
+            <>
+              <ProfileTop authState={state} />
+              <ProfileActions logout={logout} />
+              <ProfileAbout />
+              <AnnouncementCarousel />
+            </>
+          }
+          onEndReached={getmore}
+          data={posts}
+          renderItem={({ item }) => <PostItem post={item} />}
+          showsVerticalScrollIndicator={false}
+          keyExtractor={(item, index) => String(index)}
+          key={posts._id}
+        />
 
-        <ScrollView style={styles.componentsContainer}>
-          <ProfileTop authState={state} />
-          <ProfileActions logout={logout} />
-          <ProfileAbout />
-          {/* Show all post he reacted or commented */}
-          <AnnouncementCarousel />
-          <PostItem />
-        </ScrollView>
+        {/* Show all post he reacted or commented */}
+
+        <Navbar />
       </SafeAreaView>
     );
   }

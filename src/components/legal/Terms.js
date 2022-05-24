@@ -21,7 +21,7 @@ import {
   Inter_800ExtraBold,
   Inter_900Black,
 } from "@expo-google-fonts/inter";
-import AppLoading from "expo-app-loading";
+import Spinner from "../layout/Spinner";
 
 const Terms = (props) => {
   let [fontsLoaded] = useFonts({
@@ -36,7 +36,7 @@ const Terms = (props) => {
     Inter_900Black,
   });
   if (!fontsLoaded) {
-    return <AppLoading />;
+    return <Spinner />;
   } else {
     return (
       <SafeAreaView style={styles.container}>

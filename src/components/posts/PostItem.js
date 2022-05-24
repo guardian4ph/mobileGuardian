@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useState, useEffect, memo, useRef } from "react";
 import { Dimensions } from "react-native";
 import {
   Text,
@@ -21,10 +21,46 @@ import {
   Inter_800ExtraBold,
   Inter_900Black,
 } from "@expo-google-fonts/inter";
-import AppLoading from "expo-app-loading";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
-const win = Dimensions.get("window");
-const PostItem = (props) => {
+import Spinner from "../layout/Spinner";
+import moment from "moment";
+import { Context as ProfileContext } from "../../context/ProfileContext";
+import { Video, AVPlaybackStatus } from "expo-av";
+
+const PostItem = ({
+  post: {
+    _id,
+    title,
+    text,
+    name,
+    lname,
+    articleImage,
+    user,
+    likes,
+    loves,
+    wows,
+    sads,
+    hahas,
+    angrys,
+    comments,
+    date,
+  },
+}) => {
+  const {
+    state: { profiles },
+    getProfiles,
+  } = useContext(ProfileContext);
+  const [onLoadImage, setLoadImage] = useState(false);
+  const video = useRef(null);
+  const [status, setStatus] = useState({});
+  const imageLoading = () => {
+    setLoadImage(true);
+  };
+
+  useEffect(() => {
+    getProfiles();
+  }, []);
+
   let [fontsLoaded] = useFonts({
     Inter_100Thin,
     Inter_200ExtraLight,
@@ -37,61 +73,119 @@ const PostItem = (props) => {
     Inter_900Black,
   });
 
+  const timeDifference = () => {
+    var current = new Date();
+    var formatDate = new Date(date);
+
+    var minutes = 60 * 1000;
+    var hours = minutes * 60;
+    var days = hours * 24;
+    var months = days * 30;
+    var years = days * 365;
+
+    var elapsed = current - formatDate;
+
+    if (elapsed < minutes) {
+      return Math.round(elapsed / 1000) + " seconds ago";
+    } else if (elapsed < hours) {
+      return Math.round(elapsed / minutes) + " minutes ago";
+    } else if (elapsed < days) {
+      return Math.round(elapsed / hours) + " hours ago";
+    } else if (elapsed < months) {
+      return Math.round(elapsed / days) + " days ago";
+    } else if (elapsed < years) {
+      return Math.round(elapsed / months) + " months ago";
+    } else {
+      return Math.round(elapsed / years) + " years ago";
+    }
+  };
+
   if (!fontsLoaded) {
-    return <AppLoading />;
+    return <Spinner />;
   } else {
     return (
       <View style={styles.subContainer}>
         <View style={styles.componentsTitle}>
-          <View style={styles.componentsTitleContent}>
-            <View style={styles.shadow}>
-              <Image
-                style={styles.postLogo}
-                source={require("../../../assets/logos/mandaue.png")}
-              />
-            </View>
+          {profiles.length > 0
+            ? profiles.map((profile) => {
+                if (profile.user._id === user) {
+                  return (
+                    <View
+                      key={profile._id}
+                      style={styles.componentsTitleContent}
+                    >
+                      <View style={styles.shadow}>
+                        <Image
+                          style={styles.postLogo}
+                          source={
+                            onLoadImage
+                              ? require("../../../assets/logos/mandaue.png")
+                              : require(`../../../assets/defaultImage.png`)
+                          }
+                          onLoad={() => imageLoading()}
+                        />
+                      </View>
 
-            <View>
-              <Text style={styles.postTitle}>Mandaue City Command Center</Text>
-              <Text style={styles.postDate}>
-                March 29, 2022 5:48 PM - 1 month ago
-              </Text>
-            </View>
-            <View style={styles.eplipsisMenu}>
-              <AntDesign name="ellipsis1" size={24} color="black" />
-            </View>
-          </View>
+                      <View>
+                        <Text style={styles.postTitle}>
+                          {name} {lname}
+                        </Text>
+                        <Text style={styles.postDate}>
+                          {moment(date).format("MMMM Do YYYY, h:mm:ss a")}{" "}
+                          {timeDifference()}
+                        </Text>
+                      </View>
+                      <View style={styles.eplipsisMenu}>
+                        <AntDesign name="ellipsis1" size={24} color="black" />
+                      </View>
+                    </View>
+                  );
+                }
+              })
+            : null}
         </View>
         <View style={styles.componentsBody}>
-          <Text style={styles.postTitle}>What is Lorem Ipsum? </Text>
+          <Text style={styles.postTitle}>{title} </Text>
           <Text
             numberOfLines={2}
             ellipsizeMode="tail"
             style={styles.componentsBodyText}
           >
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book. It has survived not
-            only five centuries, but also the leap into electronic typesetting,
-            remaining essentially unchanged. It was popularised in the 1960s
-            with the release of Letraset sheets containing Lorem Ipsum passages,
-            and more recently with desktop publishing software like Aldus
-            PageMaker including versions of Lorem Ipsum.
+            {text}
           </Text>
         </View>
         <View style={styles.componentsPhoto}>
           <View
             style={{ maxWidth: Dimensions.get("window").width, height: 420 }}
           >
-            <Image
-              style={styles.PostImage}
-              // source={require("../../../assets/annoucement/trees.jpeg")}
-              source={{
-                uri: "https://guardian.ph/public/Pic-1651194056834.jpg",
-              }}
-              // source={{ uri: "https://reactnative.dev/img/tiny_logo.png" }}
-            />
+            {articleImage.substring(0, 4) === "Post" ? (
+              articleImage.substring(
+                articleImage.length - 3,
+                articleImage.length
+              ) === "mp4" ? (
+                <Video
+                  ref={video}
+                  style={styles.PostImage}
+                  source={{
+                    uri: `http://10.128.50.114:5000/${articleImage}`,
+                  }}
+                  useNativeControls
+                  resizeMode="contain"
+                  isLooping
+                  onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+                />
+              ) : (
+                <Image
+                  style={styles.PostImage}
+                  source={
+                    onLoadImage
+                      ? { uri: `http://10.128.50.114:5000/${articleImage}` }
+                      : require(`../../../assets/defaultImage.png`)
+                  }
+                  onLoad={() => imageLoading()}
+                />
+              )
+            ) : null}
           </View>
         </View>
         <View style={styles.componentsReaction}>
@@ -235,4 +329,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PostItem;
+export default memo(PostItem);

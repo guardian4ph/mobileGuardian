@@ -1,6 +1,4 @@
 import createDataContext from "./createDataContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import setAuthToken from "../utils/setAuthToken";
 import axios from "axios";
 
 const profileReducer = (state, action) => {
@@ -22,7 +20,7 @@ const profileReducer = (state, action) => {
         loading: false,
       };
     case "add_error":
-      return { ...state, error: action.payload };
+      return { ...state, errorMessage: action.payload };
 
     case "createProfile":
       return {
@@ -40,7 +38,6 @@ const getCurrentProfile = (dispatch) => async () => {
   try {
     const res = await axios.get("http://10.128.50.114:5000/api/profile/me");
     dispatch({ type: "getCurrentProfile", payload: res.data });
-    console.log("Get Gurrent Profile Response ", res.data);
   } catch (err) {
     const errors = err.response.data.errors;
     if (errors) {
@@ -59,15 +56,7 @@ const getProfiles = (dispatch) => async () => {
     const res = await axios.get("http://10.128.50.114:5000/api/profile");
     dispatch({ type: "getProfiles", payload: res.data });
   } catch (err) {
-    const errors = err.response.data.errors;
-    if (errors) {
-      errors.forEach((error) =>
-        dispatch({
-          type: "add_error",
-          payload: `${error.msg}`,
-        })
-      );
-    }
+    console.log(err);
   }
 };
 
@@ -158,21 +147,14 @@ const createProfile =
 
       const res = await axios.post(
         "http://10.128.50.114:5000/api/profile",
-        formData
+        formData,
+        config
       );
       console.log("Profile", res.data);
       dispatch({ type: "createProfile", payload: res.data });
       // dispatch(setAlert(edit ? "Profile Updated" : "Profile Created", "success"));
     } catch (err) {
-      const errors = err.response.data.errors;
-      if (errors) {
-        errors.forEach((error) =>
-          dispatch({
-            type: "add_error",
-            payload: `${error.msg}`,
-          })
-        );
-      }
+      console.log("createProfile ERROR", err);
     }
   };
 export const { Provider, Context } = createDataContext(
@@ -192,6 +174,6 @@ export const { Provider, Context } = createDataContext(
     profileCRUD: null,
     incidentProfile: null,
     loading: true,
-    error: {},
+    errorMessage: "",
   }
 );

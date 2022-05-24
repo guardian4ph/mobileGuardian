@@ -1,16 +1,15 @@
 import { View, Text, StyleSheet, Image } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import React, { useContext, useEffect } from "react";
 import { Entypo } from "@expo/vector-icons";
 import { Context as ProfileContext } from "../../context/ProfileContext";
 
 const ProfileTop = ({ authState }) => {
   const { state, getCurrentProfile } = useContext(ProfileContext);
+
   useEffect(() => {
     getCurrentProfile();
   }, []);
 
-  console.log("Profile State", state.profile.profilepic);
   return (
     <View style={styles.container}>
       <Image
@@ -23,11 +22,11 @@ const ProfileTop = ({ authState }) => {
 
       <View style={styles.photoContainer}>
         <View style={{ position: "relative" }}>
-          {state ? (
+          {state?.profile ? (
             <Image
               style={styles.profileImage}
               source={{
-                uri: `http://10.128.50.114:5000/${state.profile.profilepic}`,
+                uri: `http://10.128.50.114:5000/${state?.profile.profilepic}`,
               }}
             />
           ) : (
@@ -52,6 +51,7 @@ const ProfileTop = ({ authState }) => {
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff",

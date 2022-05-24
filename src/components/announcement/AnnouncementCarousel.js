@@ -1,56 +1,92 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Text, View, StyleSheet, Image, ScrollView } from "react-native";
-import { BlurView } from "expo-blur";
-import { ImageBackground } from "react-native";
+import { ActivityIndicator } from "react-native-web";
 
-const AnnouncementCarousel = (Props) => {
-  const activeAnnouncement = [
-    {
-      _id: "1",
-      articleImage: require("../../../assets/annoucement/Crime/abandon.gif"),
-      opcenLogo: require("../../../assets/logos/mandaue.png"),
-    },
-    {
-      _id: "2",
-      articleImage: require("../../../assets/annoucement/Crime/abandon.gif"),
-      opcenLogo: require("../../../assets/logos/mandaue.png"),
-    },
-    {
-      _id: "3",
-      articleImage: require("../../../assets/img/Landing/bg1.png"),
-      opcenLogo: require("../../../assets/logos/mandaue.png"),
-    },
-    {
-      _id: "4",
-      articleImage: require("../../../assets/annoucement/Crime/shooting.gif"),
-      opcenLogo: require("../../../assets/logos/mandaue.png"),
-    },
-    {
-      _id: "5",
-      articleImage: require("../../../assets/annoucement/Fire/fireDrill.gif"),
-      opcenLogo: require("../../../assets/logos/mandaue.png"),
-    },
-  ];
+import { Context as AnnouncementContext } from "../../context/AnnouncementContext";
+
+const AnnouncementCarousel = () => {
+  const { state, getAnnouncement } = useContext(AnnouncementContext);
+  const [onLoadImage, setLoadImage] = useState(false);
+  const imageLoading = () => {
+    setLoadImage(true);
+  };
+
+  const [onLoadLogo, setLoadLogo] = useState(false);
+  const logoLoading = () => {
+    setLoadLogo(true);
+  };
+
+  useEffect(() => {
+    getAnnouncement();
+  }, []);
 
   const annoucement = () => {
-    return activeAnnouncement.map((el) => {
+    return state?.announcements.map((el) => {
       return (
         <View style={styles.annoucementContainer} key={el._id}>
           <View style={styles.logoContainer}>
-            <Image style={styles.logoOpcen} source={el.opcenLogo} />
+            <Image
+              style={styles.logoOpcen}
+              // loadingIndicatorSource={ActivityIndicator}
+              source={
+                onLoadImage
+                  ? {
+                      uri: `http://10.128.50.114:5000/${el.opcenLogo}`,
+                    }
+                  : require(`../../../assets/defaultImage.png`)
+              }
+              onLoad={() => imageLoading()}
+            />
           </View>
-          <Image style={styles.image} source={el.articleImage} />
+          <View style={{ flex: 1 }}>
+            <View
+              style={{
+                position: "absolute",
+                bottom: 20,
+                zIndex: 4,
+                width: 120,
+                height: 30,
+                backgroundColor: "#ddd",
+                justifyContent: "center",
+                opacity: 0.8,
+              }}
+            >
+              <Text
+                style={{
+                  color: "#333",
+                  paddingHorizontal: 10,
+                  zIndex: 18,
+                }}
+              >
+                {el.title}
+              </Text>
+            </View>
+
+            <Image
+              style={{ height: "100%", width: 120 }}
+              source={
+                onLoadLogo
+                  ? { uri: `http://10.128.50.114:5000/${el.articleImage}` }
+                  : require(`../../../assets/defaultImage.png`)
+              }
+              onLoad={() => logoLoading()}
+            />
+          </View>
         </View>
         // console.log("Array Content", el)
       );
     });
   };
 
-  return (
-    <View style={styles.mainContianer}>
-      <ScrollView horizontal={true}>{annoucement()}</ScrollView>
-    </View>
-  );
+  if (state.announcements.length > 0) {
+    return (
+      <View style={styles.mainContianer}>
+        <ScrollView horizontal={true}>{annoucement()}</ScrollView>
+      </View>
+    );
+  } else {
+    return null;
+  }
 };
 
 const styles = StyleSheet.create({
@@ -69,7 +105,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderColor: "#ddd",
     borderWidth: 1,
-    backgroundColor: "#7a94a0",
+
     overflow: "hidden",
   },
   image: {

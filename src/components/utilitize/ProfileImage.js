@@ -4,7 +4,7 @@ import { StyleSheet, View, Image, TouchableOpacity } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 
-const ProfileImage = ({ setFilePath }) => {
+const ProfileImage = ({ state, setFilePath }) => {
   const [galleryPermission, setGalleryPermission] = useState(null);
   const [imageUri, setImageUri] = useState(null);
 
@@ -12,7 +12,7 @@ const ProfileImage = ({ setFilePath }) => {
     // here is how you can get the camera permission
 
     const imagePermission = await ImagePicker.getMediaLibraryPermissionsAsync();
-    console.log(imagePermission.status);
+    console.log("Permission ==========>", imagePermission.status);
 
     setGalleryPermission(imagePermission.status === "granted");
 
@@ -24,6 +24,12 @@ const ProfileImage = ({ setFilePath }) => {
   useEffect(() => {
     permisionFunction();
   }, []);
+
+  useEffect(() => {
+    if (state?.profile) {
+      setImageUri(`http://10.128.50.114:5000/${state.profile.profilepic}`);
+    }
+  }, [state]);
 
   const pick = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
