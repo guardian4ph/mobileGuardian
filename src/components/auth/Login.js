@@ -5,22 +5,15 @@ import {
   StyleSheet,
   SafeAreaView,
   StatusBar,
-  ActivityIndicator,
-  Modal,
   TouchableOpacity,
 } from "react-native";
 
 import {
   useFonts,
-  Inter_100Thin,
   Inter_200ExtraLight,
   Inter_300Light,
-  Inter_400Regular,
-  Inter_500Medium,
   Inter_600SemiBold,
   Inter_700Bold,
-  Inter_800ExtraBold,
-  Inter_900Black,
 } from "@expo-google-fonts/inter";
 import { TextInput } from "react-native-gesture-handler";
 import { Ionicons, EvilIcons } from "@expo/vector-icons";

@@ -22,6 +22,8 @@ import Profile from "./src/components/profile/Profile";
 import Messages from "./src/components/messages/Messages";
 import CreateProfile from "./src/components/profileForms/CreateProfile";
 import EditProfile from "./src/components/profileForms/EditProfile";
+import SinglePost from "./src/components/post/SinglePost";
+
 import Spinner from "./src/components/layout/Spinner";
 
 const Stack = createStackNavigator();
@@ -51,6 +53,7 @@ export default function App() {
                   <Stack.Screen name="Terms" component={Terms} />
                   <Stack.Screen name="ForgotPass" component={ForgotPass} />
                   <Stack.Screen name="Otp" component={Otp} />
+                  <Stack.Screen name="SinglePost" component={SinglePost} />
                   <Stack.Screen name="Posts" component={Posts} />
                   <Stack.Screen name="ID" component={ID} />
                   <Stack.Screen name="QrPhoto" component={QrPhoto} />

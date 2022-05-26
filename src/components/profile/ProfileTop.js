@@ -1,55 +1,73 @@
 import { View, Text, StyleSheet, Image } from "react-native";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Entypo } from "@expo/vector-icons";
 import { Context as ProfileContext } from "../../context/ProfileContext";
+import { useFonts, Inter_500Medium } from "@expo-google-fonts/inter";
+import Spinner from "../layout/Spinner";
 
 const ProfileTop = ({ authState }) => {
+  let [fontsLoaded] = useFonts({
+    Inter_500Medium,
+  });
   const { state, getCurrentProfile } = useContext(ProfileContext);
+  const [onLoadImage, setLoadImage] = useState(false);
+  const imageLoading = () => {
+    setLoadImage(true);
+  };
 
   useEffect(() => {
     getCurrentProfile();
   }, []);
 
-  return (
-    <View style={styles.container}>
-      <Image
-        style={styles.imageBackGround}
-        source={require("../../../assets/img/Landing/bg1.png")}
-      />
-      <View style={{ position: "absolute", right: 20, top: 12 }}>
-        <Entypo name="camera" size={24} color="#ddd" />
-      </View>
-
-      <View style={styles.photoContainer}>
-        <View style={{ position: "relative" }}>
-          {state?.profile ? (
-            <Image
-              style={styles.profileImage}
-              source={{
-                uri: `http://10.128.50.114:5000/${state?.profile.profilepic}`,
-              }}
-            />
-          ) : (
-            <Image
-              style={styles.profileImage}
-              source={require("../../../assets/img/Profile/profile.jpg")}
-            />
-          )}
-        </View>
-        <View style={{ position: "absolute", right: 20, bottom: 12 }}>
+  if (!fontsLoaded) {
+    return <Spinner />;
+  } else {
+    return (
+      <View style={styles.container}>
+        <Image
+          style={styles.imageBackGround}
+          source={
+            onLoadImage
+              ? require("../../../assets/img/Landing/bg1.png")
+              : require(`../../../assets/defaultImage.png`)
+          }
+          onLoad={() => imageLoading()}
+        />
+        <View style={{ position: "absolute", right: 20, top: 12 }}>
           <Entypo name="camera" size={24} color="#ddd" />
         </View>
-      </View>
-      {authState?.user ? (
-        <View style={styles.nameContainer}>
-          <Text style={styles.nameTxt}>
-            {" "}
-            {authState?.user.name} {authState?.user.lname}
-          </Text>
+
+        <View style={styles.photoContainer}>
+          <View style={{ position: "relative" }}>
+            {state?.profile ? (
+              <Image
+                style={styles.profileImage}
+                source={{
+                  uri: `http://10.128.50.114:5000/${state?.profile.profilepic}`,
+                }}
+              />
+            ) : (
+              <Image
+                style={styles.profileImage}
+                source={require("../../../assets/img/Profile/profile.jpg")}
+              />
+            )}
+          </View>
+          <View style={{ position: "absolute", right: 20, bottom: 12 }}>
+            <Entypo name="camera" size={24} color="#ddd" />
+          </View>
         </View>
-      ) : null}
-    </View>
-  );
+        {authState?.user ? (
+          <View style={styles.nameContainer}>
+            <Text style={styles.nameTxt}>
+              {" "}
+              {authState?.user.name} {authState?.user.lname}
+            </Text>
+          </View>
+        ) : null}
+      </View>
+    );
+  }
 };
 
 const styles = StyleSheet.create({

@@ -1,81 +1,68 @@
 import React, { useContext, useState, useEffect, memo, useRef } from "react";
 import { Dimensions } from "react-native";
-import {
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  StatusBar,
-  TouchableOpacity,
-  ImageBackground,
-} from "react-native";
+import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import {
   useFonts,
-  Inter_100Thin,
-  Inter_200ExtraLight,
-  Inter_300Light,
   Inter_400Regular,
-  Inter_500Medium,
+  Inter_300Light,
   Inter_600SemiBold,
-  Inter_700Bold,
-  Inter_800ExtraBold,
-  Inter_900Black,
 } from "@expo-google-fonts/inter";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import Spinner from "../layout/Spinner";
 import moment from "moment";
 import { Context as ProfileContext } from "../../context/ProfileContext";
-import { Video, AVPlaybackStatus } from "expo-av";
+import { Video } from "expo-av";
+import AppLoading from "expo-app-loading";
 
-const PostItem = ({
-  post: {
-    _id,
-    title,
-    text,
-    name,
-    lname,
-    articleImage,
-    user,
-    likes,
-    loves,
-    wows,
-    sads,
-    hahas,
-    angrys,
-    comments,
-    date,
-  },
-}) => {
+const PostItem = ({ post }) => {
+  const navigation = useNavigation();
   const {
     state: { profiles },
     getProfiles,
   } = useContext(ProfileContext);
   const [onLoadImage, setLoadImage] = useState(false);
   const video = useRef(null);
-  const [status, setStatus] = useState({});
+
   const imageLoading = () => {
     setLoadImage(true);
   };
+  const numFormatter = (num) => {
+    if (num > 999 && num < 1000000) {
+      return Math.abs(num) > 999
+        ? Math.sign(num) * (Math.abs(num) / 1000).toFixed(1) + "K"
+        : Math.sign(num) * Math.abs(num); // convert to K for number from > 1000 < 1 million
+    } else if (num > 1000000) {
+      return Math.abs(num) > 999
+        ? Math.sign(num) * (Math.abs(num) / 1000000).toFixed(1) + "M"
+        : Math.sign(num) * Math.abs(num); // convert to M for number from > 1 million
+    } else if (num < 900) {
+      return num; // if value < 1000, nothing to do
+    }
+  };
+  const totalReactions = numFormatter(
+    post.likes.length +
+      post.loves.length +
+      post.wows.length +
+      post.sads.length +
+      post.hahas.length +
+      post.angrys.length
+  );
+  const totalComments = numFormatter(post.comments.length);
 
   useEffect(() => {
     getProfiles();
   }, []);
 
   let [fontsLoaded] = useFonts({
-    Inter_100Thin,
-    Inter_200ExtraLight,
-    Inter_300Light,
     Inter_400Regular,
-    Inter_500Medium,
+    Inter_300Light,
     Inter_600SemiBold,
-    Inter_700Bold,
-    Inter_800ExtraBold,
-    Inter_900Black,
   });
 
   const timeDifference = () => {
     var current = new Date();
-    var formatDate = new Date(date);
+    var formatDate = new Date(post.date);
 
     var minutes = 60 * 1000;
     var hours = minutes * 60;
@@ -100,15 +87,15 @@ const PostItem = ({
     }
   };
 
-  if (!fontsLoaded) {
-    return <Spinner />;
+  if (!fontsLoaded && post?.loading) {
+    return <AppLoading />;
   } else {
     return (
       <View style={styles.subContainer}>
         <View style={styles.componentsTitle}>
           {profiles.length > 0
             ? profiles.map((profile) => {
-                if (profile.user._id === user) {
+                if (profile.user._id === post?.user) {
                   return (
                     <View
                       key={profile._id}
@@ -119,7 +106,9 @@ const PostItem = ({
                           style={styles.postLogo}
                           source={
                             onLoadImage
-                              ? require("../../../assets/logos/mandaue.png")
+                              ? {
+                                  uri: `http://10.128.50.114:5000/${profile.profilepic}`,
+                                }
                               : require(`../../../assets/defaultImage.png`)
                           }
                           onLoad={() => imageLoading()}
@@ -128,10 +117,10 @@ const PostItem = ({
 
                       <View>
                         <Text style={styles.postTitle}>
-                          {name} {lname}
+                          {post?.name} {post?.lname}
                         </Text>
                         <Text style={styles.postDate}>
-                          {moment(date).format("MMMM Do YYYY, h:mm:ss a")}{" "}
+                          {moment(post?.date).format("MMMM Do YYYY, h:mm:ss a")}{" "}
                           {timeDifference()}
                         </Text>
                       </View>
@@ -145,41 +134,45 @@ const PostItem = ({
             : null}
         </View>
         <View style={styles.componentsBody}>
-          <Text style={styles.postTitle}>{title} </Text>
+          <Text style={styles.postTitle}>{post?.title} </Text>
           <Text
-            numberOfLines={2}
+            numberOfLines={4}
             ellipsizeMode="tail"
             style={styles.componentsBodyText}
           >
-            {text}
+            {post?.text}
           </Text>
         </View>
         <View style={styles.componentsPhoto}>
           <View
-            style={{ maxWidth: Dimensions.get("window").width, height: 420 }}
+            style={{
+              maxWidth: Dimensions.get("window").width,
+              height: undefined,
+            }}
           >
-            {articleImage.substring(0, 4) === "Post" ? (
-              articleImage.substring(
-                articleImage.length - 3,
-                articleImage.length
+            {post?.articleImage.substring(0, 4) === "Post" ? (
+              post?.articleImage.substring(
+                post?.articleImage.length - 3,
+                post?.articleImage.length
               ) === "mp4" ? (
                 <Video
                   ref={video}
                   style={styles.PostImage}
                   source={{
-                    uri: `http://10.128.50.114:5000/${articleImage}`,
+                    uri: `http://10.128.50.114:5000/${post?.articleImage}`,
                   }}
                   useNativeControls
                   resizeMode="contain"
                   isLooping
-                  onPlaybackStatusUpdate={(status) => setStatus(() => status)}
                 />
               ) : (
                 <Image
                   style={styles.PostImage}
                   source={
                     onLoadImage
-                      ? { uri: `http://10.128.50.114:5000/${articleImage}` }
+                      ? {
+                          uri: `http://10.128.50.114:5000/${post?.articleImage}`,
+                        }
                       : require(`../../../assets/defaultImage.png`)
                   }
                   onLoad={() => imageLoading()}
@@ -190,12 +183,19 @@ const PostItem = ({
         </View>
         <View style={styles.componentsReaction}>
           <View style={[styles.componentsTitleContent, ,]}>
-            <View style={styles.absoluteLeft}>
-              <Text>Reactions</Text>
-            </View>
-            <View style={styles.absoluteRigth}>
-              <Text>Comments</Text>
-            </View>
+            {totalReactions > 0 && (
+              <View style={styles.absoluteLeft}>
+                <Text>{totalReactions}</Text>
+                <Text> Reactions</Text>
+              </View>
+            )}
+
+            {post.comments.length > 0 && (
+              <View style={styles.absoluteRigth}>
+                <Text>{totalComments}</Text>
+                <Text> Comments</Text>
+              </View>
+            )}
           </View>
         </View>
         <View style={styles.componentsMenu}>
@@ -203,7 +203,14 @@ const PostItem = ({
             <AntDesign name="like2" size={20} color="#333" />
             <Text style={[styles.txtDark, styles.fontSmall]}> Like</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.componentsMenuIcons}>
+          <TouchableOpacity
+            style={styles.componentsMenuIcons}
+            onPress={() =>
+              navigation.navigate("SinglePost", {
+                id: post?._id,
+              })
+            }
+          >
             <FontAwesome name="comment-o" size={20} color="#333" />
             <Text style={[styles.txtDark, styles.fontSmall]}> Comment</Text>
           </TouchableOpacity>
@@ -219,6 +226,7 @@ const PostItem = ({
 
 const styles = StyleSheet.create({
   subContainer: {
+    flex: 1,
     marginVertical: 3,
   },
 
@@ -229,10 +237,10 @@ const styles = StyleSheet.create({
   },
   componentsBody: {
     backgroundColor: "#fff",
-    height: 75,
     borderTopColor: "#ddd",
     borderTopWidth: 1,
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
     justifyContent: "center",
   },
   componentsPhoto: {
@@ -293,7 +301,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   postDate: {
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Inter_300Light",
     color: "#aaa",
     fontSize: 11,
   },
@@ -305,16 +313,18 @@ const styles = StyleSheet.create({
   absoluteRigth: {
     position: "absolute",
     right: 20,
+    flexDirection: "row",
   },
   absoluteLeft: {
     position: "absolute",
     left: 20,
+    flexDirection: "row",
   },
 
   componentsBodyText: {
-    fontFamily: "Inter_400Regular",
     color: "#333",
-    fontSize: 12,
+    fontSize: 14,
+    letterSpacing: 0.1,
   },
 
   componentsMenuIcons: {

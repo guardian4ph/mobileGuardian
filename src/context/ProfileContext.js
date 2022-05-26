@@ -150,7 +150,7 @@ const createProfile =
         formData,
         config
       );
-      console.log("Profile", res.data);
+
       dispatch({ type: "createProfile", payload: res.data });
       // dispatch(setAlert(edit ? "Profile Updated" : "Profile Created", "success"));
     } catch (err) {

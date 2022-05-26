@@ -12,15 +12,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import {
   useFonts,
-  Inter_100Thin,
-  Inter_200ExtraLight,
   Inter_300Light,
-  Inter_400Regular,
   Inter_500Medium,
   Inter_600SemiBold,
   Inter_700Bold,
-  Inter_800ExtraBold,
-  Inter_900Black,
 } from "@expo-google-fonts/inter";
 import Spinner from "../layout/Spinner";
 
@@ -30,7 +25,6 @@ const ID = (props) => {
     Inter_600SemiBold,
     Inter_700Bold,
     Inter_500Medium,
-    Inter_400Regular,
   });
   if (!fontsLoaded) {
     return <Spinner />;

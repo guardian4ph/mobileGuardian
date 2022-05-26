@@ -6,89 +6,97 @@ import {
   FontAwesome5,
   FontAwesome,
 } from "@expo/vector-icons";
+import { useFonts, Inter_600SemiBold } from "@expo-google-fonts/inter";
+import Spinner from "../layout/Spinner";
 
 const ProfileAbout = () => {
-  return (
-    <View style={styles.container}>
-      <View style={{ width: "100%", paddingVertical: 15 }}>
-        <View style={{ flexDirection: "row" }}>
-          <View style={styles.iconContainer}>
-            <MaterialIcons name="work" size={20} color="#3d6f86" />
-          </View>
-          <View style={styles.tittleContainer}>
-            <Text style={styles.textVaccination}>
-              Founder, Director at{" "}
-              <Text style={styles.textContent}> SugboTek Inc.</Text>
-            </Text>
-          </View>
-        </View>
+  let [fontsLoaded] = useFonts({ Inter_600SemiBold });
 
-        <View style={{ flexDirection: "row" }}>
-          <View style={styles.iconContainer}>
-            <MaterialIcons name="work-outline" size={24} color="#3d6f86" />
-          </View>
-          <View style={styles.tittleContainer}>
-            <Text style={styles.textVaccination}>
-              Former <Text>consultant</Text> at
-              <Text style={styles.textContent}> Department of Defense</Text>
-            </Text>
-          </View>
-        </View>
-
-        <View style={{ flexDirection: "row" }}>
-          <View style={styles.iconContainer}>
-            <FontAwesome5 name="school" size={20} color="#3d6f86" />
-          </View>
-          <View style={styles.tittleContainer}>
-            <Text style={styles.textVaccination}>
-              Went to
-              <Text style={styles.textContent}>
-                {" "}
-                University of San Jose Recolletos
+  if (!fontsLoaded) {
+    return <Spinner />;
+  } else {
+    return (
+      <View style={styles.container}>
+        <View style={{ width: "100%", paddingVertical: 15 }}>
+          <View style={{ flexDirection: "row" }}>
+            <View style={styles.iconContainer}>
+              <MaterialIcons name="work" size={20} color="#3d6f86" />
+            </View>
+            <View style={styles.tittleContainer}>
+              <Text style={styles.textVaccination}>
+                Founder, Director at{" "}
+                <Text style={styles.textContent}> SugboTek Inc.</Text>
               </Text>
-            </Text>
+            </View>
           </View>
-        </View>
 
-        <View style={{ flexDirection: "row" }}>
-          <View style={styles.iconContainer}>
-            <MaterialIcons name="school" size={24} color="#3d6f86" />
-          </View>
-          <View style={styles.tittleContainer}>
-            <Text style={styles.textVaccination}>
-              Studied
-              <Text style={styles.textContent}>
-                {" "}
-                Bachelor of Science in Computer Science
+          <View style={{ flexDirection: "row" }}>
+            <View style={styles.iconContainer}>
+              <MaterialIcons name="work-outline" size={24} color="#3d6f86" />
+            </View>
+            <View style={styles.tittleContainer}>
+              <Text style={styles.textVaccination}>
+                Former <Text>consultant</Text> at
+                <Text style={styles.textContent}> Department of Defense</Text>
               </Text>
-            </Text>
+            </View>
           </View>
-        </View>
-        <View style={{ flexDirection: "row" }}>
-          <View style={styles.iconContainer}>
-            <MaterialIcons name="coronavirus" size={24} color="#7498a9" />
+
+          <View style={{ flexDirection: "row" }}>
+            <View style={styles.iconContainer}>
+              <FontAwesome5 name="school" size={20} color="#3d6f86" />
+            </View>
+            <View style={styles.tittleContainer}>
+              <Text style={styles.textVaccination}>
+                Went to
+                <Text style={styles.textContent}>
+                  {" "}
+                  University of San Jose Recolletos
+                </Text>
+              </Text>
+            </View>
           </View>
-          <View style={styles.tittleContainer}>
-            <Text style={styles.textVaccination}>
-              Vaccination
-              <Text style={styles.textContent}> Completed</Text>
-            </Text>
+
+          <View style={{ flexDirection: "row" }}>
+            <View style={styles.iconContainer}>
+              <MaterialIcons name="school" size={24} color="#3d6f86" />
+            </View>
+            <View style={styles.tittleContainer}>
+              <Text style={styles.textVaccination}>
+                Studied
+                <Text style={styles.textContent}>
+                  {" "}
+                  Bachelor of Science in Computer Science
+                </Text>
+              </Text>
+            </View>
           </View>
-        </View>
-        <View style={{ flexDirection: "row" }}>
-          <View style={styles.iconContainer}>
-            <FontAwesome name="building" size={20} color="#7498a9" />
+          <View style={{ flexDirection: "row" }}>
+            <View style={styles.iconContainer}>
+              <MaterialIcons name="coronavirus" size={24} color="#7498a9" />
+            </View>
+            <View style={styles.tittleContainer}>
+              <Text style={styles.textVaccination}>
+                Vaccination
+                <Text style={styles.textContent}> Completed</Text>
+              </Text>
+            </View>
           </View>
-          <View style={styles.tittleContainer}>
-            <Text style={styles.textVaccination}>
-              Operation Center{" "}
-              <Text style={styles.textContent}> Mandue Command Center</Text>
-            </Text>
+          <View style={{ flexDirection: "row" }}>
+            <View style={styles.iconContainer}>
+              <FontAwesome name="building" size={20} color="#7498a9" />
+            </View>
+            <View style={styles.tittleContainer}>
+              <Text style={styles.textVaccination}>
+                Operation Center{" "}
+                <Text style={styles.textContent}> Mandue Command Center</Text>
+              </Text>
+            </View>
           </View>
         </View>
       </View>
-    </View>
-  );
+    );
+  }
 };
 
 const styles = StyleSheet.create({

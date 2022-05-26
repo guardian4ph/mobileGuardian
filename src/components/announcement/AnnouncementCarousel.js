@@ -1,7 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Text, View, StyleSheet, Image, ScrollView } from "react-native";
-import { ActivityIndicator } from "react-native-web";
-
 import { Context as AnnouncementContext } from "../../context/AnnouncementContext";
 
 const AnnouncementCarousel = () => {

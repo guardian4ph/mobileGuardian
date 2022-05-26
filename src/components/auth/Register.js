@@ -25,8 +25,6 @@ const Register = ({ navigation }) => {
   const [password2, setPassword2] = useState("");
   const [isMatch, setIsMatch] = useState(true);
 
-  console.log(state.errorMessage);
-
   const onSubmit = async () => {
     if (password !== password2) {
       setIsMatch(false);
