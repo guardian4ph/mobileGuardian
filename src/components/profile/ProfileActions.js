@@ -1,14 +1,13 @@
-import React, { useContext } from "react";
+import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { Context as ProfileContext } from "../../context/ProfileContext";
 import { useFonts, Inter_400Regular } from "@expo-google-fonts/inter";
-import Spinner from "../layout/Spinner";
 import AppLoading from "expo-app-loading";
+import { AntDesign } from "@expo/vector-icons";
 
-const ProfileActions = ({ logout }) => {
+const ProfileActions = ({ profile }) => {
   let [fontsLoaded] = useFonts({ Inter_400Regular });
-  const { state } = useContext(ProfileContext);
+
   const navigation = useNavigation();
 
   if (!fontsLoaded) {
@@ -26,12 +25,24 @@ const ProfileActions = ({ logout }) => {
               justifyContent: "space-evenly",
             }}
           >
-            {state.profile ? (
-              <TouchableOpacity
-                onPress={() => navigation.navigate("EditProfile")}
-              >
-                <Text style={styles.textName}>Edit Profile</Text>
-              </TouchableOpacity>
+            {profile !== null ? (
+              <>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("EditProfile")}
+                >
+                  <Text style={styles.textName}>Edit Profile</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("AddEducation")}
+                >
+                  <Text style={styles.textName}>Education</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("AddExperience")}
+                >
+                  <Text style={styles.textName}>Jobs/Trainings</Text>
+                </TouchableOpacity>
+              </>
             ) : (
               <TouchableOpacity
                 onPress={() => navigation.navigate("CreateProfile")}
@@ -39,12 +50,10 @@ const ProfileActions = ({ logout }) => {
                 <Text style={styles.textName}>Create Profile</Text>
               </TouchableOpacity>
             )}
-
-            <TouchableOpacity>
-              <Text style={styles.textName}>Settings</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={logout}>
-              <Text style={styles.textName}>Log-out</Text>
+            <TouchableOpacity onPress={() => navigation.navigate("Setting")}>
+              <Text>
+                <AntDesign name="setting" size={24} color="#fff" />
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

@@ -5,19 +5,15 @@ import { Context as ProfileContext } from "../../context/ProfileContext";
 import { useFonts, Inter_500Medium } from "@expo-google-fonts/inter";
 import Spinner from "../layout/Spinner";
 
-const ProfileTop = ({ authState }) => {
+const ProfileTop = ({ user, profile }) => {
   let [fontsLoaded] = useFonts({
     Inter_500Medium,
   });
-  const { state, getCurrentProfile } = useContext(ProfileContext);
+
   const [onLoadImage, setLoadImage] = useState(false);
   const imageLoading = () => {
     setLoadImage(true);
   };
-
-  useEffect(() => {
-    getCurrentProfile();
-  }, []);
 
   if (!fontsLoaded) {
     return <Spinner />;
@@ -39,11 +35,11 @@ const ProfileTop = ({ authState }) => {
 
         <View style={styles.photoContainer}>
           <View style={{ position: "relative" }}>
-            {state?.profile ? (
+            {profile ? (
               <Image
                 style={styles.profileImage}
                 source={{
-                  uri: `http://10.128.50.114:5000/${state?.profile.profilepic}`,
+                  uri: `http://10.128.50.114:5000/${profile?.profilepic}`,
                 }}
               />
             ) : (
@@ -53,15 +49,12 @@ const ProfileTop = ({ authState }) => {
               />
             )}
           </View>
-          <View style={{ position: "absolute", right: 20, bottom: 12 }}>
-            <Entypo name="camera" size={24} color="#ddd" />
-          </View>
         </View>
-        {authState?.user ? (
+        {user ? (
           <View style={styles.nameContainer}>
             <Text style={styles.nameTxt}>
               {" "}
-              {authState?.user.name} {authState?.user.lname}
+              {user?.name} {user?.lname}
             </Text>
           </View>
         ) : null}
@@ -90,7 +83,7 @@ const styles = StyleSheet.create({
   photoContainer: {
     position: "absolute",
     bottom: -30,
-    left: 15,
+    left: 10,
     width: 150,
     height: 150,
     alignItems: "center",

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FlatList } from "react-native";
 import Navbar from "../layout/Navbar";
 import PostItem from "./PostItem";
@@ -20,10 +20,8 @@ const Posts = () => {
   }, []);
 
   const getmore = () => {
-    getPosts(posts.length);
+    getPosts(posts?.length);
   };
-
-  // const [state, setState] = useState();
 
   if (loading) {
     return <Spinner />;
@@ -43,6 +41,7 @@ const Posts = () => {
           renderItem={({ item }) => <PostItem post={item} />}
           showsVerticalScrollIndicator={false}
           keyExtractor={(item, index) => String(index)}
+          initialNumToRender={5}
           key={posts._id}
         />
 

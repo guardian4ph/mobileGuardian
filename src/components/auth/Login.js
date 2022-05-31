@@ -43,13 +43,6 @@ const Login = ({ navigation }) => {
     setPasswordType(true);
   };
 
-  const onSubmit = async () => {
-    try {
-      login({ email, password });
-    } catch (err) {
-      console.log(err);
-    }
-  };
   const [token, setToken] = useState("");
 
   const getData = async () => {
@@ -68,16 +61,22 @@ const Login = ({ navigation }) => {
 
   useEffect(() => {
     getData();
-    loadUser();
   }, [token]);
 
   useEffect(() => {
     if (state?.token) {
+      loadUser();
       navigation.navigate("Posts");
     }
-  }, [state]);
+  }, [state.token]);
 
-  console.log("ERROR MESG ", state.errorMessage);
+  const onSubmit = async () => {
+    try {
+      login({ email, password });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   if (!fontsLoaded) {
     return <Spinner />;

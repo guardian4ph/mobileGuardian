@@ -19,6 +19,18 @@ const profileReducer = (state, action) => {
         incidentProfile: action.payload,
         loading: false,
       };
+    case "addExperience":
+      return {
+        ...state,
+        profile: action.payload,
+        loading: false,
+      };
+    case "addEducation":
+      return {
+        ...state,
+        profile: action.payload,
+        loading: false,
+      };
     case "add_error":
       return { ...state, errorMessage: action.payload };
 
@@ -38,16 +50,12 @@ const getCurrentProfile = (dispatch) => async () => {
   try {
     const res = await axios.get("http://10.128.50.114:5000/api/profile/me");
     dispatch({ type: "getCurrentProfile", payload: res.data });
+    console.log("Current Profile Loaded");
   } catch (err) {
-    const errors = err.response.data.errors;
-    if (errors) {
-      errors.forEach((error) =>
-        dispatch({
-          type: "add_error",
-          payload: `${error.msg}`,
-        })
-      );
-    }
+    dispatch({
+      type: "add_error",
+      payload: `${err}`,
+    });
   }
 };
 
@@ -157,6 +165,55 @@ const createProfile =
       console.log("createProfile ERROR", err);
     }
   };
+
+const addExperience =
+  (dispatch) =>
+  async ({ title, company, location, from, to, current, description }) => {
+    try {
+      const res = await axios.put(
+        "http://10.128.50.114:5000/api/profile/experience",
+        {
+          title,
+          company,
+          location,
+          from,
+          to,
+          current,
+          description,
+        }
+      );
+      dispatch({ type: "addExperience", payload: res.data });
+    } catch (err) {
+      dispatch({
+        type: "add_error",
+        payload: err,
+      });
+    }
+  };
+const addEducation =
+  (dispatch) =>
+  async ({ school, degree, fieldofstudy, from, to, current, description }) => {
+    try {
+      const res = await axios.put(
+        "http://10.128.50.114:5000/api/profile/education",
+        {
+          school,
+          degree,
+          fieldofstudy,
+          from,
+          to,
+          current,
+          description,
+        }
+      );
+      dispatch({ type: "addEducation", payload: res.data });
+    } catch (err) {
+      dispatch({
+        type: "add_error",
+        payload: err,
+      });
+    }
+  };
 export const { Provider, Context } = createDataContext(
   profileReducer,
   {
@@ -167,6 +224,8 @@ export const { Provider, Context } = createDataContext(
     clearProfileCRUD,
     getProfileByIncidentUserId,
     createProfile,
+    addExperience,
+    addEducation,
   },
   {
     profile: null,

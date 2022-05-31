@@ -23,6 +23,9 @@ import Messages from "./src/components/messages/Messages";
 import CreateProfile from "./src/components/profileForms/CreateProfile";
 import EditProfile from "./src/components/profileForms/EditProfile";
 import SinglePost from "./src/components/post/SinglePost";
+import AddEducation from "./src/components/profileForms/AddEducation";
+import AddExperience from "./src/components/profileForms/AddExperience";
+import Setting from "./src/components/dashboard/Setting";
 
 import Spinner from "./src/components/layout/Spinner";
 
@@ -51,6 +54,11 @@ export default function App() {
                   <Stack.Screen name="Login" component={Login} />
                   <Stack.Screen name="Privacy" component={Privacy} />
                   <Stack.Screen name="Terms" component={Terms} />
+                  <Stack.Screen name="AddEducation" component={AddEducation} />
+                  <Stack.Screen
+                    name="AddExperience"
+                    component={AddExperience}
+                  />
                   <Stack.Screen name="ForgotPass" component={ForgotPass} />
                   <Stack.Screen name="Otp" component={Otp} />
                   <Stack.Screen name="SinglePost" component={SinglePost} />
@@ -65,6 +73,7 @@ export default function App() {
                   />
                   <Stack.Screen name="EditProfile" component={EditProfile} />
                   <Stack.Screen name="Spinner" component={Spinner} />
+                  <Stack.Screen name="Setting" component={Setting} />
                 </Stack.Navigator>
               </NavigationContainer>
             </AuthProvider>

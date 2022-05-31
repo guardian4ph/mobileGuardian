@@ -9,6 +9,7 @@ import AnnouncementCarousel from "../announcement/AnnouncementCarousel";
 import Spinner from "../layout/Spinner";
 import Navbar from "../layout/Navbar";
 import { Context as PostContext } from "../../context/PostContext";
+import { Context as ProfileContext } from "../../context/ProfileContext";
 
 const Profile = ({ navigation }) => {
   const {
@@ -16,22 +17,28 @@ const Profile = ({ navigation }) => {
     getPosts,
   } = useContext(PostContext);
 
-  const { state, logout } = useContext(AuthContext);
+  const {
+    state: { user },
+  } = useContext(AuthContext);
+
+  const {
+    state: { profile, loading },
+    getCurrentProfile,
+  } = useContext(ProfileContext);
 
   useEffect(() => {
     getPosts();
   }, []);
 
   useEffect(() => {
-    if (!state.token) {
-      navigation.navigate("Landing");
-    }
-  }, [state.token]);
+    getCurrentProfile();
+  }, []);
+
   const getmore = () => {
     getPosts(posts.length);
   };
 
-  if (state.loading) {
+  if (loading) {
     return <Spinner />;
   } else {
     return (
@@ -40,9 +47,9 @@ const Profile = ({ navigation }) => {
           style={styles.componentsContainer}
           ListHeaderComponent={
             <>
-              <ProfileTop authState={state} />
-              <ProfileActions logout={logout} />
-              <ProfileAbout />
+              <ProfileTop user={user} profile={profile} />
+              <ProfileActions profile={profile} />
+              <ProfileAbout profile={profile} />
               <AnnouncementCarousel />
             </>
           }

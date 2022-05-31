@@ -34,8 +34,7 @@ const getPosts = (dispatch) => async (skip) => {
       `http://10.128.50.114:5000/api/posts?skip=${skip}`
     );
     dispatch({ type: "getPosts", payload: res.data });
-
-    console.log("callled", res.data);
+    console.log("Posts Loading");
   } catch (err) {
     dispatch({
       type: "add_error",
@@ -48,6 +47,7 @@ const getPost = (dispatch) => async (id) => {
   try {
     const res = await axios.get(`http://10.128.50.114:5000/api/posts/${id}`);
     dispatch({ type: "getPost", payload: res.data });
+    console.log("Fetching Post");
   } catch (err) {
     dispatch({
       type: "add_error",
@@ -57,7 +57,6 @@ const getPost = (dispatch) => async (id) => {
 };
 
 const addComment = (dispatch) => async (postId, formData) => {
-  console.log("Context AddComment", postId, formData);
   try {
     const res = await axios.post(
       `http://10.128.50.114:5000/api/posts/comment/${postId}`,

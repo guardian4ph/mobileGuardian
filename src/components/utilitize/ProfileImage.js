@@ -12,7 +12,6 @@ const ProfileImage = ({ state, setFilePath }) => {
     // here is how you can get the camera permission
 
     const imagePermission = await ImagePicker.getMediaLibraryPermissionsAsync();
-    console.log("Permission ==========>", imagePermission.status);
 
     setGalleryPermission(imagePermission.status === "granted");
 

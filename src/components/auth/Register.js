@@ -72,15 +72,18 @@ const Register = ({ navigation }) => {
           />
         </TouchableOpacity>
       </View>
+      {!isMatch ? (
+        <Alert
+          msg={"Password does not match."}
+          type={"danger"}
+          remove_error={remove_error}
+        />
+      ) : null}
 
       <KeyboardAvoidingView
         style={styles.subContainer}
         behavior={Platform.OS === "ios" ? "padding" : null}
       >
-        {!isMatch && (
-          <Alert msg={"Password does not match."} remove_error={remove_error} />
-        )}
-
         <View>
           <View style={styles.componentsContainer}>
             <View

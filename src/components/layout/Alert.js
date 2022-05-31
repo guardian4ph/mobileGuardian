@@ -2,8 +2,18 @@ import { View, Text, StyleSheet, TouchableOpacity, Modal } from "react-native";
 import React, { useEffect, useState } from "react";
 import { EvilIcons } from "@expo/vector-icons";
 
-const Alert = ({ msg, remove_error }) => {
+const Alert = ({ type, msg, remove_error }) => {
   const [showAlert, setShowAlert] = useState(false);
+  const [errorType, setErrorType] = useState("");
+
+  useEffect(() => {
+    if (type === "success") {
+      setErrorType("Success");
+    } else {
+      setErrorType("Ooops");
+    }
+  }, []);
+
   useEffect(() => {
     if (msg) {
       setShowAlert(true);
@@ -12,8 +22,14 @@ const Alert = ({ msg, remove_error }) => {
 
   const toogleModal = () => {
     setShowAlert(false);
-    remove_error();
+    if (type === null) {
+      remove_error();
+    }
   };
+  setTimeout(() => {
+    setShowAlert(false);
+  }, 5000);
+
   return (
     msg !== null && (
       <Modal transparent visible={showAlert}>
@@ -40,7 +56,7 @@ const Alert = ({ msg, remove_error }) => {
                   fontSize: 30,
                 }}
               >
-                Ooops...
+                {errorType}
               </Text>
             </View>
             <View
@@ -56,7 +72,6 @@ const Alert = ({ msg, remove_error }) => {
                     fontSize: 18,
                     letterSpacing: 0.5,
                     textAlign: "center",
-                    fontFamily: "Inter_200ExtraLight",
                   },
                 ]}
               >

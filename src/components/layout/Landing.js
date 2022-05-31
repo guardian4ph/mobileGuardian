@@ -66,15 +66,6 @@ const Landing = () => {
           source={require("../../../assets/img/Landing/bg1.png")}
           imageStyle={{ opacity: 0.5 }}
         >
-          <View style={styles.backBtn}>
-            <TouchableOpacity>
-              <Ionicons
-                name="arrow-back-circle-outline"
-                size={24}
-                color="#fff"
-              />
-            </TouchableOpacity>
-          </View>
           <View style={styles.innerWrapper}>
             <View
               style={{

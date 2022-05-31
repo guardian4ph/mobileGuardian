@@ -71,7 +71,6 @@ const AnnouncementCarousel = () => {
             />
           </View>
         </View>
-        // console.log("Array Content", el)
       );
     });
   };

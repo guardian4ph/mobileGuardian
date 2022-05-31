@@ -53,6 +53,7 @@ const loadUser = (dispatch) => {
       // const res = await axios.get(`${serverURI}/auth`);
       const res = await axios.get("http://10.128.50.114:5000/api/auth");
       dispatch({ type: "load_user", payload: res.data });
+      console.log("User Loaded");
     } catch (err) {
       console.log("Error", err);
     }
@@ -73,7 +74,7 @@ const registerUser =
       await AsyncStorage.setItem("token", res.data.token);
 
       dispatch({ type: "register_user", payload: res.data.token });
-      dispatch(loadUser());
+      dispatch({ type: "loadUser" });
     } catch (err) {
       const errors = err.response.data.errors;
       if (errors) {
@@ -98,7 +99,8 @@ const login =
       await AsyncStorage.setItem("token", res.data.token);
 
       dispatch({ type: "login", payload: res.data.token });
-      dispatch(loadUser());
+      dispatch({ type: "loadUser" });
+      console.log("Login in progress");
     } catch (err) {
       const errors = err.response.data.errors;
       console.log(errors);
