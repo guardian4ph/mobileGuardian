@@ -23,6 +23,24 @@ const PostReducer = (state, action) => {
       };
     case "add_error":
       return { ...state, errorMessage: action.payload };
+    case "deleteComment":
+      return {
+        ...state,
+        post: {
+          ...state.post,
+          comments: state.post.comments.filter(
+            (comment) => comment._id !== action.payload
+          ),
+        },
+        loading: false,
+      };
+    case "clear_post":
+      return {
+        posts: [],
+        post: null,
+        loading: true,
+        errorMessage: {},
+      };
     default:
       return state;
   }
@@ -73,9 +91,35 @@ const addComment = (dispatch) => async (postId, formData) => {
   }
 };
 
+const clearPost = (dispatch) => async () => {
+  try {
+    dispatch({ type: "clearPost" });
+  } catch (err) {
+    dispatch({
+      type: "add_error",
+      payload: err,
+    });
+  }
+};
+
+const deleteComment = (dispatch) => async (postId, commentId) => {
+  try {
+    await axios.delete(
+      `http://10.128.50.114:5000/api/posts/comment/${postId}/${commentId}`
+    );
+    dispatch({ type: "deleteComment", payload: commentId });
+    console.log("post deleted");
+  } catch (err) {
+    dispatch({
+      type: "add_error",
+      payload: err,
+    });
+  }
+};
+
 export const { Provider, Context } = createDataContext(
   PostReducer,
-  { getPosts, getPost, addComment },
+  { getPosts, getPost, addComment, clearPost, deleteComment },
   {
     posts: [],
     post: null,

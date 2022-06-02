@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import {
   TouchableOpacity,
   Text,
@@ -8,7 +8,7 @@ import {
   StatusBar,
   Image,
 } from "react-native";
-
+import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import {
   useFonts,
@@ -19,23 +19,32 @@ import {
 } from "@expo-google-fonts/inter";
 import QRCode from "react-native-qrcode-svg";
 import Spinner from "../layout/Spinner";
+import { Context as ProfileContext } from "../../context/ProfileContext";
 
 const QrPhoto = (props) => {
+  const navigation = useNavigation();
   let [fontsLoaded] = useFonts({
     Inter_300Light,
     Inter_600SemiBold,
     Inter_700Bold,
     Inter_500Medium,
   });
+  const {
+    state: { profile },
+    getCurrentProfile,
+  } = useContext(ProfileContext);
+  useEffect(() => {
+    getCurrentProfile();
+  }, []);
 
   let logo = require("../../../assets/logos/mandaue.png");
-  if (!fontsLoaded) {
+  if (!fontsLoaded && !profile) {
     return <Spinner />;
   } else {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.backBtn}>
-          <TouchableOpacity onPress={() => props.navigation.navigate("ID")}>
+          <TouchableOpacity onPress={() => props.navigation.goBack()}>
             <Ionicons
               name="arrow-back-circle-outline"
               size={30}
@@ -50,7 +59,7 @@ const QrPhoto = (props) => {
               <TouchableOpacity onPress={() => props.navigation.navigate("ID")}>
                 <QRCode
                   size={350}
-                  value="https://guardian.ph"
+                  value={profile?.user.name}
                   // logoSize={50}
                   // logo={logo}
                   // logoBackgroundColor="transparent"
@@ -60,8 +69,8 @@ const QrPhoto = (props) => {
             </View>
             <View style={styles.nameContainer}>
               <View style={{ flexDirection: "row" }}>
-                <Text style={styles.textName}>Luis Ben Cluade </Text>
-                <Text style={styles.textName}> Dedicatoria</Text>
+                <Text style={styles.textName}>{profile?.user.name} </Text>
+                <Text style={styles.textName}> {profile?.user.lname}</Text>
               </View>
               <View>
                 <Text style={{ color: "#aaa", paddingTop: 10 }}>
@@ -79,9 +88,9 @@ const QrPhoto = (props) => {
               </TouchableOpacity>
             </View>
             <View style={styles.operationAddress}>
-              <View style={styles.alignDetails}>
+              <View style={[styles.alignDetails, { width: "80%" }]}>
                 <Text numberOfLines={1} style={styles.textAddress}>
-                  1797 Sitio San Miguel, Apas, Cebu City, Cebu
+                  {profile?.completeaddress}
                 </Text>
 
                 <Text style={{ color: "#aaa" }}>ADDRESS</Text>

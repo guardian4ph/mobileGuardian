@@ -1,6 +1,13 @@
 import React, { useContext, useState, useEffect, memo, useRef } from "react";
 import { Dimensions } from "react-native";
-import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Share,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import {
   useFonts,
@@ -12,11 +19,16 @@ import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import Spinner from "../layout/Spinner";
 import moment from "moment";
 import { Context as ProfileContext } from "../../context/ProfileContext";
+import { Context as AuthContext } from "../../context/AuthContext";
 import { Video } from "expo-av";
-import AppLoading from "expo-app-loading";
+import { captureRef } from "react-native-view-shot";
 
 const PostItem = ({ post }) => {
+  const viewRef = useRef();
   const navigation = useNavigation();
+  const {
+    state: { user },
+  } = useContext(AuthContext);
   const {
     state: { profiles },
     getProfiles,
@@ -27,6 +39,35 @@ const PostItem = ({ post }) => {
   const imageLoading = () => {
     setLoadImage(true);
   };
+
+  const sharePost = async () => {
+    try {
+      const uri = await captureRef(viewRef, { format: "png", quality: 0.7 });
+      await Share.share({ url: uri, message: "#guardianPH" });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  let userLiked = post?.likes?.filter((el) => {
+    return el.user === user?._id;
+  });
+  let userLoved = post?.loves?.filter((el) => {
+    return el.user === user?._id;
+  });
+  let userWows = post?.wows?.filter((el) => {
+    return el.user === user?._id;
+  });
+  let userSads = post?.sads?.filter((el) => {
+    return el.user === user?._id;
+  });
+  let userHahas = post?.hahas?.filter((el) => {
+    return el.user === user?._id;
+  });
+
+  let userAngrys = post?.angrys?.filter((el) => {
+    return el.user === user?._id;
+  });
+
   const numFormatter = (num) => {
     if (num > 999 && num < 1000000) {
       return Math.abs(num) > 999
@@ -41,14 +82,14 @@ const PostItem = ({ post }) => {
     }
   };
   const totalReactions = numFormatter(
-    post.likes.length +
-      post.loves.length +
-      post.wows.length +
-      post.sads.length +
-      post.hahas.length +
-      post.angrys.length
+    post?.likes.length +
+      post?.loves.length +
+      post?.wows.length +
+      post?.sads.length +
+      post?.hahas.length +
+      post?.angrys.length
   );
-  const totalComments = numFormatter(post.comments.length);
+  const totalComments = numFormatter(post?.comments.length);
 
   useEffect(() => {
     getProfiles();
@@ -88,114 +129,119 @@ const PostItem = ({ post }) => {
   };
 
   if (!fontsLoaded && post?.loading) {
-    return <AppLoading />;
+    return <Spinner />;
   } else {
     return (
       <View style={styles.subContainer}>
-        <View style={styles.componentsTitle}>
-          {profiles.length > 0
-            ? profiles.map((profile) => {
-                if (profile.user._id === post?.user) {
-                  return (
-                    <View
-                      key={profile._id}
-                      style={styles.componentsTitleContent}
-                    >
-                      <View style={styles.shadow}>
-                        <Image
-                          style={styles.postLogo}
-                          source={
-                            onLoadImage
-                              ? {
-                                  uri: `http://10.128.50.114:5000/${profile.profilepic}`,
-                                }
-                              : require(`../../../assets/defaultImage.png`)
-                          }
-                          onLoad={() => imageLoading()}
-                        />
-                      </View>
+        <View ref={viewRef} collapsable={false}>
+          <View style={styles.componentsTitle}>
+            {profiles.length > 0
+              ? profiles.map((profile) => {
+                  if (profile.user._id === post?.user) {
+                    return (
+                      <View
+                        key={profile._id}
+                        style={styles.componentsTitleContent}
+                      >
+                        <View style={styles.shadow}>
+                          <Image
+                            style={styles.postLogo}
+                            source={
+                              onLoadImage
+                                ? {
+                                    uri: `http://10.128.50.114:5000/${profile.profilepic}`,
+                                  }
+                                : require(`../../../assets/defaultImage.png`)
+                            }
+                            onLoad={() => imageLoading()}
+                          />
+                        </View>
 
-                      <View>
-                        <Text style={styles.postTitle}>
-                          {post?.name} {post?.lname}
-                        </Text>
-                        <Text style={styles.postDate}>
-                          {moment(post?.date).format("MMMM Do YYYY, h:mm:ss a")}{" "}
-                          {timeDifference()}
-                        </Text>
+                        <View>
+                          <Text style={styles.postTitle}>
+                            {post?.name} {post?.lname}
+                          </Text>
+                          <Text style={styles.postDate}>
+                            {moment(post?.date).format(
+                              "MMMM Do YYYY, h:mm:ss a"
+                            )}{" "}
+                            {timeDifference()}
+                          </Text>
+                        </View>
+                        <View style={styles.eplipsisMenu}>
+                          <AntDesign name="ellipsis1" size={24} color="black" />
+                        </View>
                       </View>
-                      <View style={styles.eplipsisMenu}>
-                        <AntDesign name="ellipsis1" size={24} color="black" />
-                      </View>
-                    </View>
-                  );
-                }
-              })
-            : null}
-        </View>
-        <View style={styles.componentsBody}>
-          <Text style={styles.postTitle}>{post?.title} </Text>
-          <Text
-            numberOfLines={4}
-            ellipsizeMode="tail"
-            style={styles.componentsBodyText}
-          >
-            {post?.text}
-          </Text>
-        </View>
-        <View style={styles.componentsPhoto}>
-          <View
-            style={{
-              maxWidth: Dimensions.get("window").width,
-              height: undefined,
-            }}
-          >
-            {post?.articleImage.substring(0, 4) === "Post" ? (
-              post?.articleImage.substring(
-                post?.articleImage.length - 3,
-                post?.articleImage.length
-              ) === "mp4" ? (
-                <Video
-                  ref={video}
-                  style={styles.PostImage}
-                  source={{
-                    uri: `http://10.128.50.114:5000/${post?.articleImage}`,
-                  }}
-                  useNativeControls
-                  resizeMode="contain"
-                  isLooping
-                />
-              ) : (
-                <Image
-                  style={styles.PostImage}
-                  source={
-                    onLoadImage
-                      ? {
-                          uri: `http://10.128.50.114:5000/${post?.articleImage}`,
-                        }
-                      : require(`../../../assets/defaultImage.png`)
+                    );
                   }
-                  onLoad={() => imageLoading()}
-                />
-              )
-            ) : null}
+                })
+              : null}
           </View>
-        </View>
-        <View style={styles.componentsReaction}>
-          <View style={[styles.componentsTitleContent, ,]}>
-            {totalReactions > 0 && (
-              <View style={styles.absoluteLeft}>
-                <Text>{totalReactions}</Text>
-                <Text> Reactions</Text>
-              </View>
-            )}
+          <View style={styles.componentsBody}>
+            <Text style={styles.postTitle}>{post?.title} </Text>
+            <Text
+              numberOfLines={4}
+              ellipsizeMode="tail"
+              style={styles.componentsBodyText}
+            >
+              {post?.text}
+            </Text>
+          </View>
+          <View style={styles.componentsPhoto}>
+            <View
+              style={{
+                maxWidth: Dimensions.get("window").width,
+                height: undefined,
+              }}
+            >
+              {post?.articleImage.substring(0, 4) === "Post" ? (
+                post?.articleImage.substring(
+                  post?.articleImage.length - 3,
+                  post?.articleImage.length
+                ) === "mp4" ? (
+                  <Video
+                    ref={video}
+                    style={styles.PostImage}
+                    source={{
+                      uri: `http://10.128.50.114:5000/${post?.articleImage}`,
+                    }}
+                    useNativeControls
+                    resizeMode="contain"
+                    isLooping
+                  />
+                ) : (
+                  <Image
+                    style={styles.PostImage}
+                    source={
+                      onLoadImage
+                        ? {
+                            uri: `http://10.128.50.114:5000/${post?.articleImage}`,
+                          }
+                        : require(`../../../assets/defaultImage.png`)
+                    }
+                    onLoad={() => imageLoading()}
+                  />
+                )
+              ) : null}
+            </View>
+          </View>
 
-            {post.comments.length > 0 && (
-              <View style={styles.absoluteRigth}>
-                <Text>{totalComments}</Text>
-                <Text> Comments</Text>
-              </View>
-            )}
+          <View style={styles.componentsReaction}>
+            <View style={[styles.componentsTitleContent, ,]}>
+              {totalReactions > 0 && (
+                <View style={styles.absoluteLeft}>
+                  <Text>{totalReactions}</Text>
+                  <Text> Reactions</Text>
+                </View>
+              )}
+
+              {post?.comments.length > 0 && (
+                <View style={styles.absoluteRigth}>
+                  <Text>{totalComments}</Text>
+                  <Text> Comments</Text>
+                </View>
+              )}
+            </View>
           </View>
         </View>
         <View style={styles.componentsMenu}>
@@ -203,6 +249,7 @@ const PostItem = ({ post }) => {
             <AntDesign name="like2" size={20} color="#333" />
             <Text style={[styles.txtDark, styles.fontSmall]}> Like</Text>
           </TouchableOpacity>
+          {/* Sending object tru route */}
           <TouchableOpacity
             style={styles.componentsMenuIcons}
             onPress={() =>
@@ -214,7 +261,10 @@ const PostItem = ({ post }) => {
             <FontAwesome name="comment-o" size={20} color="#333" />
             <Text style={[styles.txtDark, styles.fontSmall]}> Comment</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.componentsMenuIcons}>
+          <TouchableOpacity
+            style={styles.componentsMenuIcons}
+            onPress={sharePost}
+          >
             <FontAwesome name="share-square-o" size={20} color="#333" />
             <Text style={[styles.txtDark, styles.fontSmall]}> Share</Text>
           </TouchableOpacity>

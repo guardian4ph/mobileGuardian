@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, memo } from "react";
 import { FlatList } from "react-native";
 import Navbar from "../layout/Navbar";
 import PostItem from "./PostItem";
@@ -13,7 +13,12 @@ const Posts = () => {
   const {
     state: { posts, loading },
     getPosts,
+    clearPost,
   } = useContext(PostContext);
+
+  useEffect(() => {
+    clearPost();
+  }, []);
 
   useEffect(() => {
     getPosts();
@@ -42,7 +47,7 @@ const Posts = () => {
           showsVerticalScrollIndicator={false}
           keyExtractor={(item, index) => String(index)}
           initialNumToRender={5}
-          key={posts._id}
+          key={posts?._id}
         />
 
         <Navbar />
@@ -51,4 +56,4 @@ const Posts = () => {
   }
 };
 
-export default Posts;
+export default memo(Posts);

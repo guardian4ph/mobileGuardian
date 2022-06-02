@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Text,
   View,
@@ -7,8 +7,9 @@ import {
   SafeAreaView,
   Image,
 } from "react-native";
-
+import { Context as ProfileContext } from "../../context/ProfileContext";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import {
   useFonts,
@@ -20,19 +21,45 @@ import {
 import Spinner from "../layout/Spinner";
 
 const ID = (props) => {
+  const navigation = useNavigation();
+  const [currentEmployment, setCurrentEmployment] = useState([]);
+  const [prevEmployment, setPrevEmployment] = useState([]);
+
+  const latestEmployment = prevEmployment.sort(
+    (a, b) => new Date(b.to).getTime() - new Date(a.to).getTime()
+  )[0];
+  const {
+    state: { profile },
+    getCurrentProfile,
+  } = useContext(ProfileContext);
   let [fontsLoaded] = useFonts({
     Inter_300Light,
     Inter_600SemiBold,
     Inter_700Bold,
     Inter_500Medium,
   });
+
+  useEffect(() => {
+    getCurrentProfile();
+  }, []);
+
+  useEffect(() => {
+    if (profile) {
+      setCurrentEmployment(
+        profile?.experience.filter((emp) => emp.current === true)
+      );
+
+      setPrevEmployment(profile?.experience.filter((prev) => prev.to !== null));
+    }
+  }, [profile]);
+
   if (!fontsLoaded) {
     return <Spinner />;
   } else {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.backBtn}>
-          <TouchableOpacity onPress={() => props.navigation.navigate("Posts")}>
+          <TouchableOpacity onPress={() => props.navigation.goBack()}>
             <Ionicons
               name="arrow-back-circle-outline"
               size={30}
@@ -48,19 +75,28 @@ const ID = (props) => {
               <TouchableOpacity
                 onPress={() => props.navigation.navigate("QrPhoto")}
               >
-                <Image
-                  style={styles.profileImage}
-                  source={require("../../../assets/img/Profile/profile.jpg")}
-                />
+                {profile ? (
+                  <Image
+                    style={styles.profileImage}
+                    source={{
+                      uri: `http://10.128.50.114:5000/${profile?.profilepic}`,
+                    }}
+                  />
+                ) : (
+                  <Image
+                    style={styles.profileImage}
+                    source={require("../../../assets/img/Profile/profile.jpg")}
+                  />
+                )}
               </TouchableOpacity>
-              <Text style={{ color: "#aaa", paddingTop: 12 }}>
+              <Text style={{ color: "#aaa", paddingVertical: 12 }}>
                 TAP TO SHOW QR CODE
               </Text>
             </View>
             <View style={styles.nameContainer}>
               <View style={{ flexDirection: "row" }}>
-                <Text style={styles.textName}>Luis Ben Cluade </Text>
-                <Text style={styles.textName}> Dedicatoria</Text>
+                <Text style={styles.textName}>{profile?.user.name} </Text>
+                <Text style={styles.textName}> {profile?.user.lname}</Text>
               </View>
               <View>
                 <Text style={{ color: "#aaa", paddingTop: 10 }}>
@@ -78,23 +114,51 @@ const ID = (props) => {
               </TouchableOpacity>
             </View>
             <View style={styles.operationAddress}>
-              <View style={styles.alignDetails}>
-                <Text numberOfLines={1} style={styles.textAddress}>
-                  1797 Sitio San Miguel, Apas, Cebu City, Cebu
+              <View style={[styles.alignDetails, { width: "80%" }]}>
+                <Text numberOfLines={1} style={[styles.textAddress]}>
+                  {profile?.completeaddress}
                 </Text>
 
                 <Text style={{ color: "#aaa" }}>ADDRESS</Text>
               </View>
             </View>
             <View style={styles.detailsContainer}>
-              <View style={[styles.alignDetails, { paddingTop: 10 }]}>
-                <Text style={styles.semiBold}>Emergency Dispatch Operator</Text>
-                <Text>at</Text>
-                <Text style={styles.textAddress}>
-                  GUARDIAN Command and Control
-                </Text>
-                <Text style={{ color: "#aaa" }}>EMPLOYMENT</Text>
-              </View>
+              {currentEmployment.length > 0 ? (
+                <View style={[styles.alignDetails, { paddingTop: 10 }]}>
+                  <Text style={styles.semiBold}>
+                    {currentEmployment[0]?.title}
+                  </Text>
+                  <Text>at</Text>
+                  <Text style={styles.textAddress}>
+                    {currentEmployment[0]?.company}
+                  </Text>
+                  <Text style={{ color: "#aaa" }}>EMPLOYMENT</Text>
+                </View>
+              ) : latestEmployment ? (
+                <View style={[styles.alignDetails, { paddingTop: 10 }]}>
+                  <Text style={styles.semiBold}>
+                    Former {latestEmployment.title}
+                  </Text>
+                  <Text>at</Text>
+                  <Text style={styles.textAddress}>
+                    {latestEmployment.company}
+                  </Text>
+                  <Text style={{ color: "#aaa" }}>EMPLOYMENT</Text>
+                </View>
+              ) : (
+                <View style={[styles.alignDetails, { paddingTop: 10 }]}>
+                  <Text style={{ fontSize: 16, color: "#333" }}>
+                    No current employment to display, please go to{" "}
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("AddExperience")}
+                  >
+                    <Text style={{ fontSize: 20, color: "#215a75" }}>
+                      Jobs/Trainings
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
             </View>
             <View style={styles.operationContainer}>
               <View

@@ -1,16 +1,13 @@
-import {
-  ScrollView,
-  TextInput,
-  StyleSheet,
-  View,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, View, KeyboardAvoidingView, Keyboard } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
-import { Ionicons, Feather } from "@expo/vector-icons";
+import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
+import { Feather } from "@expo/vector-icons";
 import { Context as ProfileContext } from "../../context/ProfileContext";
 import { Context as PostContext } from "../../context/PostContext";
+import { Platform } from "expo-modules-core";
 
 const CommentForm = ({ postId }) => {
+  const [keyboardStatus, setKeyboardStatus] = useState(false);
   const {
     state: { profile },
     getCurrentProfile,
@@ -23,6 +20,22 @@ const CommentForm = ({ postId }) => {
   const [text, setText] = useState("");
 
   useEffect(() => {
+    const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+      setKeyboardStatus(true);
+      console.log("didshow");
+    });
+    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+      setKeyboardStatus(false);
+      console.log("didHide");
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
+
+  useEffect(() => {
     getCurrentProfile();
   }, []);
 
@@ -33,7 +46,6 @@ const CommentForm = ({ postId }) => {
       try {
         addComment(postId, { text });
         setText("");
-        console.log(postId, text);
       } catch (err) {
         console.log(`Registration Error ${err}`);
       }
@@ -44,41 +56,68 @@ const CommentForm = ({ postId }) => {
     return <AppLoading />;
   } else {
     return (
-      <ScrollView style={{ width: "100%" }}>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            backgroundColor: "#fff",
-            justifyContent: "center",
-          }}
-        >
-          <TextInput
-            style={styles.inputStyle}
-            multiline
-            numberOfLines={4}
-            editable
-            maxLength={40}
-            autoCorrect={false}
-            placeholderTextColor="#333"
-            placeholder="Leave comment"
-            value={text}
-            onChangeText={setText}
-          />
+      <View style={{ width: "100%", position: "relative" }}>
+        {Platform.OS === "ios" ? (
           <View
-            style={{
-              justifyContent: "center",
-              flex: 1,
-              flexDirection: "row",
-              alignItems: "center",
-            }}
+            style={[
+              keyboardStatus ? styles.containerWith : styles.containerWithout,
+            ]}
           >
-            <TouchableOpacity onPress={() => onSubmit()}>
-              <Feather name="send" size={24} color="#215a75" />
-            </TouchableOpacity>
+            <View style={{ width: "80%", zIndex: 99 }}>
+              <TextInput
+                style={styles.inputStyle}
+                autoCorrect={false}
+                placeholderTextColor="#333"
+                placeholder="Leave comment"
+                value={text}
+                onChangeText={setText}
+                multiline
+                autoFocus={true}
+                editable
+                onSubmitEditing={Keyboard.dismiss}
+              ></TextInput>
+            </View>
+            <View
+              style={{
+                justifyContent: "center",
+                width: "20%",
+                alignItems: "center",
+              }}
+            >
+              <TouchableOpacity onPress={() => onSubmit()}>
+                <Feather name="send" size={24} color="#215a75" />
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </ScrollView>
+        ) : (
+          <View style={[styles.containerWithout]}>
+            <View style={{ width: "80%", zIndex: 99 }}>
+              <TextInput
+                style={styles.inputStyle}
+                autoCorrect={false}
+                placeholderTextColor="#333"
+                placeholder="Leave comment"
+                value={text}
+                onChangeText={setText}
+                multiline
+                autoFocus={true}
+                editable
+              ></TextInput>
+            </View>
+            <View
+              style={{
+                justifyContent: "center",
+                width: "20%",
+                alignItems: "center",
+              }}
+            >
+              <TouchableOpacity onPress={() => onSubmit()}>
+                <Feather name="send" size={24} color="#215a75" />
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+      </View>
     );
   }
 };
@@ -90,8 +129,24 @@ const styles = StyleSheet.create({
     borderColor: "#ddd",
     borderRadius: 5,
     backgroundColor: "#fff",
-    width: "87%",
+    width: "100%",
     marginHorizontal: 5,
+  },
+  containerWithout: {
+    position: "absolute",
+    bottom: 91,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    justifyContent: "center",
+  },
+  containerWith: {
+    position: "absolute",
+    bottom: 0,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    justifyContent: "center",
   },
 });
 

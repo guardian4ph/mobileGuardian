@@ -15,6 +15,7 @@ const Profile = ({ navigation }) => {
   const {
     state: { posts },
     getPosts,
+    clearPost,
   } = useContext(PostContext);
 
   const {
@@ -26,6 +27,9 @@ const Profile = ({ navigation }) => {
     getCurrentProfile,
   } = useContext(ProfileContext);
 
+  useEffect(() => {
+    clearPost();
+  }, []);
   useEffect(() => {
     getPosts();
   }, []);
@@ -58,7 +62,7 @@ const Profile = ({ navigation }) => {
           renderItem={({ item }) => <PostItem post={item} />}
           showsVerticalScrollIndicator={false}
           keyExtractor={(item, index) => String(index)}
-          key={posts._id}
+          key={posts?._id}
         />
 
         {/* Show all post he reacted or commented */}

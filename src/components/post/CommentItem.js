@@ -1,16 +1,29 @@
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { Context as ProfileContext } from "../../context/ProfileContext";
-import { AntDesign } from "@expo/vector-icons";
+import { Context as AuthContext } from "../../context/AuthContext";
+
+import CommentModal from "../layout/CommentModal";
 
 const CommentItem = ({
   postId,
-  comment: { _id, text, name, lname, profilepic, user, date },
+  comment: { _id, text, name, lname, user, date },
+  deleteComment,
 }) => {
+  const { state } = useContext(AuthContext);
+
   const {
     state: { profiles },
     getProfiles,
   } = useContext(ProfileContext);
+
+  const [show, setShow] = useState(false);
+
+  const showModal = () => {
+    if (state.user._id === user) {
+      setShow(true);
+    }
+  };
 
   const [onLoadImage, setLoadImage] = useState(false);
   const imageLoading = () => {
@@ -47,8 +60,9 @@ const CommentItem = ({
     }
   };
 
+  let textTrim = text.replace(/\s{2,}/g, " ").trim();
   return (
-    <View style={styles.subContainer}>
+    <View key={_id} style={styles.subContainer}>
       <View style={styles.componentsTitle}>
         {profiles.length > 0
           ? profiles.map((profile) => {
@@ -73,33 +87,32 @@ const CommentItem = ({
                       <Text style={styles.postTitle}>
                         {name} {lname}
                       </Text>
-                      <View
-                        style={{
-                          padding: 3,
-                          borderRadius: 5,
-                          backgroundColor: "#eee",
-                          width: "85%",
-                          padding: 5,
-                          justifyContent: "center",
-                        }}
-                      >
-                        <Text
-                          numberOfLines={2}
-                          ellipsizeMode="tail"
+                      <TouchableOpacity on onLongPress={() => showModal()}>
+                        <View
                           style={{
-                            color: "#333",
-                            fontSize: 13,
-                            paddingLeft: 3,
+                            padding: 3,
+                            borderRadius: 5,
+                            backgroundColor: "#eee",
+                            width: "90%",
+                            padding: 5,
+                            justifyContent: "center",
                           }}
                         >
-                          {text}
-                        </Text>
-                      </View>
+                          <Text
+                            numberOfLines={4}
+                            ellipsizeMode="tail"
+                            style={{
+                              color: "#333",
+                              fontSize: 13,
+                              paddingLeft: 3,
+                            }}
+                          >
+                            {textTrim}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
 
                       <Text style={styles.postDate}>{timeDifference()}</Text>
-                    </View>
-                    <View style={styles.eplipsisMenu}>
-                      <AntDesign name="ellipsis1" size={24} color="black" />
                     </View>
                   </View>
                 );
@@ -107,28 +120,37 @@ const CommentItem = ({
             })
           : null}
       </View>
-      <View style={styles.componentsBody}></View>
+      {show && (
+        <CommentModal
+          show={show}
+          postId={postId}
+          _id={_id}
+          onClose={() => setShow(false)}
+          deleteComment={deleteComment}
+        />
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   subContainer: {
-    marginVertical: 3,
+    marginTop: 3,
+    flex: 1,
   },
 
   componentsTitle: {
     backgroundColor: "#fff",
-    height: 70,
+
     overflow: "hidden",
   },
 
   componentsTitleContent: {
     display: "flex",
     flexDirection: "row",
+    paddingVertical: 7,
     height: "100%",
     alignItems: "center",
-    maxHeight: 440,
   },
   postLogo: {
     width: 50,
@@ -161,7 +183,7 @@ const styles = StyleSheet.create({
   },
   eplipsisMenu: {
     position: "absolute",
-    right: 20,
+    right: 7,
   },
   componentsBodyText: {
     fontFamily: "Inter_300Light",

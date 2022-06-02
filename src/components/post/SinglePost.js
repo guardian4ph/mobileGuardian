@@ -1,6 +1,11 @@
-import React, { useContext, useEffect, memo } from "react";
+import React, { useContext, useEffect, memo, useState } from "react";
 
-import { ScrollView, KeyboardAvoidingView } from "react-native";
+import {
+  ScrollView,
+  KeyboardAvoidingView,
+  StyleSheet,
+  Keyboard,
+} from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import Spinner from "../layout/Spinner";
@@ -11,14 +16,36 @@ import PostItem from "../posts/PostItem";
 import CommentForm from "./CommentForm";
 import CommentItem from "./CommentItem";
 
-const SinglePost = ({ navigation, route }) => {
+const SinglePost = ({ route }) => {
+  const [keyboardShow, setKeyboardShow] = useState();
+
   const {
     state: { post, loading },
     getPost,
+    deleteComment,
   } = useContext(PostContext);
 
   useEffect(() => {
     getPost(route.params.id);
+  }, []);
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        setKeyboardShow(true);
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setKeyboardShow(false);
+      }
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
   }, []);
 
   if (loading) {
@@ -32,23 +59,36 @@ const SinglePost = ({ navigation, route }) => {
           behavior={Platform.OS === "ios" ? "padding" : null}
           style={{ flex: 1 }}
         >
-          <ScrollView>
+          <ScrollView
+            style={[
+              keyboardShow ? styles.withKeyboard : styles.withoutKeyboard,
+            ]}
+          >
             <PostItem post={post} />
-            <CommentForm postId={post?._id} />
+
             {post?.comments.map((comment) => (
               <CommentItem
                 key={comment._id}
                 comment={comment}
                 postId={post?._id}
+                deleteComment={deleteComment}
               />
             ))}
           </ScrollView>
+          <CommentForm postId={post?._id} />
+          <Navbar />
         </KeyboardAvoidingView>
-
-        <Navbar />
       </SafeAreaProvider>
     );
   }
 };
 
+const styles = StyleSheet.create({
+  withKeyboard: {
+    marginBottom: 35,
+  },
+  withoutKeyboard: {
+    marginBottom: 130,
+  },
+});
 export default memo(SinglePost);

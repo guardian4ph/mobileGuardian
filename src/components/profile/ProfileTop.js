@@ -24,7 +24,7 @@ const ProfileTop = ({ user, profile }) => {
           style={styles.imageBackGround}
           source={
             onLoadImage
-              ? require("../../../assets/img/Landing/bg1.png")
+              ? require("../../../assets/img/Landing/bg1Small.png")
               : require(`../../../assets/defaultImage.png`)
           }
           onLoad={() => imageLoading()}
