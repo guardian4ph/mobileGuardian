@@ -48,6 +48,7 @@ const Posts = () => {
           keyExtractor={(item, index) => String(index)}
           initialNumToRender={5}
           key={posts?._id}
+          style={{ marginBottom: 91, padding: 5 }}
         />
 
         <Navbar />

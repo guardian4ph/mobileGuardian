@@ -18,16 +18,24 @@ import CommentItem from "./CommentItem";
 
 const SinglePost = ({ route }) => {
   const [keyboardShow, setKeyboardShow] = useState();
-
+  const [pressed, setPressed] = useState(false);
+  console.log("Pressed", pressed);
   const {
     state: { post, loading },
     getPost,
+    clearPost,
     deleteComment,
   } = useContext(PostContext);
 
   useEffect(() => {
-    getPost(route.params.id);
+    clearPost();
   }, []);
+
+  useEffect(() => {
+    getPost(route.params.id);
+    console.log("Get Post Rendered");
+  }, [pressed]);
+
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
@@ -64,7 +72,7 @@ const SinglePost = ({ route }) => {
               keyboardShow ? styles.withKeyboard : styles.withoutKeyboard,
             ]}
           >
-            <PostItem post={post} />
+            <PostItem post={post} onPress={() => setPressed(!pressed)} />
 
             {post?.comments.map((comment) => (
               <CommentItem

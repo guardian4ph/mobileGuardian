@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
   Share,
+  Pressable,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import {
@@ -20,21 +21,25 @@ import Spinner from "../layout/Spinner";
 import moment from "moment";
 import { Context as ProfileContext } from "../../context/ProfileContext";
 import { Context as AuthContext } from "../../context/AuthContext";
+import { Context as PostContext } from "../../context/PostContext";
 import { Video } from "expo-av";
 import { captureRef } from "react-native-view-shot";
+import Reaction from "../post/Reaction";
 
-const PostItem = ({ post }) => {
+const PostItem = ({ onPress, post }) => {
   const viewRef = useRef();
   const navigation = useNavigation();
   const {
     state: { user },
   } = useContext(AuthContext);
+  const { addLike } = useContext(PostContext);
   const {
     state: { profiles },
     getProfiles,
   } = useContext(ProfileContext);
   const [onLoadImage, setLoadImage] = useState(false);
   const video = useRef(null);
+  const [showReaction, setShowReaction] = useState(false);
 
   const imageLoading = () => {
     setLoadImage(true);
@@ -48,23 +53,23 @@ const PostItem = ({ post }) => {
       console.error(err);
     }
   };
-  let userLiked = post?.likes?.filter((el) => {
-    return el.user === user?._id;
-  });
-  let userLoved = post?.loves?.filter((el) => {
-    return el.user === user?._id;
-  });
-  let userWows = post?.wows?.filter((el) => {
-    return el.user === user?._id;
-  });
-  let userSads = post?.sads?.filter((el) => {
-    return el.user === user?._id;
-  });
-  let userHahas = post?.hahas?.filter((el) => {
-    return el.user === user?._id;
-  });
 
-  let userAngrys = post?.angrys?.filter((el) => {
+  const userLiked = post?.likes?.filter((el) => {
+    return el.user === user?._id;
+  });
+  const userLoved = post?.loves?.filter((el) => {
+    return el.user === user?._id;
+  });
+  const userWows = post?.wows?.filter((el) => {
+    return el.user === user?._id;
+  });
+  const userSads = post?.sads?.filter((el) => {
+    return el.user === user?._id;
+  });
+  const userHahas = post?.hahas?.filter((el) => {
+    return el.user === user?._id;
+  });
+  const userAngrys = post?.angrys?.filter((el) => {
     return el.user === user?._id;
   });
 
@@ -81,14 +86,33 @@ const PostItem = ({ post }) => {
       return num; // if value < 1000, nothing to do
     }
   };
-  const totalReactions = numFormatter(
-    post?.likes.length +
-      post?.loves.length +
-      post?.wows.length +
-      post?.sads.length +
-      post?.hahas.length +
-      post?.angrys.length
-  );
+
+  const [totalReactions, setTotalReactions] = useState();
+  const [numLikes, setNumLikes] = useState();
+  const [numLoves, setNumLoves] = useState();
+  const [numWows, setNumWows] = useState();
+  const [numSads, setNumSads] = useState();
+  const [numHahas, setNumHahas] = useState();
+  const [numAngrys, setNumAngrys] = useState();
+  useEffect(() => {
+    setTotalReactions(
+      numFormatter(
+        post?.likes?.length +
+          post?.loves?.length +
+          post?.wows?.length +
+          post?.sads?.length +
+          post?.hahas?.length +
+          post?.angrys?.length
+      )
+    );
+    setNumLikes(numFormatter(post?.likes?.length));
+    setNumLoves(numFormatter(post?.loves?.length));
+    setNumWows(numFormatter(post?.wows?.length));
+    setNumSads(numFormatter(post?.sads?.length));
+    setNumHahas(numFormatter(post?.hahas?.length));
+    setNumAngrys(numFormatter(post?.angrys?.length));
+  }, [post, onPress]);
+
   const totalComments = numFormatter(post?.comments.length);
 
   useEffect(() => {
@@ -225,19 +249,127 @@ const PostItem = ({ post }) => {
               ) : null}
             </View>
           </View>
-
+          {showReaction ? (
+            <Reaction
+              onPress={onPress}
+              _id={post?._id}
+              showReaction
+              userLiked={userLiked}
+              userLoved={userLoved}
+              userWows={userWows}
+              userSads={userSads}
+              userHahas={userHahas}
+              userAngrys={userAngrys}
+              onClose={() => setShowReaction(false)}
+            />
+          ) : null}
           <View style={styles.componentsReaction}>
             <View style={[styles.componentsTitleContent, ,]}>
               {totalReactions > 0 && (
-                <View style={styles.absoluteLeft}>
-                  <Text>{totalReactions}</Text>
-                  <Text> Reactions</Text>
+                <View
+                  key={post?._id}
+                  style={[
+                    styles.absoluteLeft,
+                    { alignItems: "center", justifyContent: "center" },
+                  ]}
+                >
+                  {post?.likes?.length > 0 && (
+                    <View style={styles.reaction}>
+                      <Image
+                        style={{ width: 20, height: 20 }}
+                        source={
+                          onLoadImage
+                            ? require(`../../../assets/icons/reactions/like.png`)
+                            : require(`../../../assets/defaultImage.png`)
+                        }
+                        onLoad={() => imageLoading()}
+                      />
+                      <Text style={{ marginLeft: -2 }}> {numLikes}</Text>
+                    </View>
+                  )}
+                  {post?.loves?.length > 0 && (
+                    <View style={styles.reaction}>
+                      <Image
+                        style={{ width: 20, height: 20 }}
+                        source={
+                          onLoadImage
+                            ? require(`../../../assets/icons/reactions/love.png`)
+                            : require(`../../../assets/defaultImage.png`)
+                        }
+                        onLoad={() => imageLoading()}
+                      />
+                      <Text style={{ marginLeft: -2 }}> {numLoves}</Text>
+                    </View>
+                  )}
+                  {post?.wows?.length > 0 && (
+                    <View style={styles.reaction}>
+                      <Image
+                        style={{ width: 21, height: 21 }}
+                        source={
+                          onLoadImage
+                            ? require(`../../../assets/icons/reactions/wow.png`)
+                            : require(`../../../assets/defaultImage.png`)
+                        }
+                        onLoad={() => imageLoading()}
+                      />
+                      <Text style={{ marginLeft: -2 }}> {numWows}</Text>
+                    </View>
+                  )}
+                  {post?.sads?.length > 0 && (
+                    <View style={styles.reaction}>
+                      <Image
+                        style={{ width: 22, height: 22 }}
+                        source={
+                          onLoadImage
+                            ? require(`../../../assets/icons/reactions/sad.png`)
+                            : require(`../../../assets/defaultImage.png`)
+                        }
+                        onLoad={() => imageLoading()}
+                      />
+                      <Text style={{ marginLeft: -2 }}> {numSads}</Text>
+                    </View>
+                  )}
+                  {post?.hahas?.length > 0 && (
+                    <View style={styles.reaction}>
+                      <Image
+                        style={{ width: 20, height: 20 }}
+                        source={
+                          onLoadImage
+                            ? require(`../../../assets/icons/reactions/haha.png`)
+                            : require(`../../../assets/defaultImage.png`)
+                        }
+                        onLoad={() => imageLoading()}
+                      />
+                      <Text style={{ marginLeft: -2 }}> {numHahas}</Text>
+                    </View>
+                  )}
+                  {post?.angrys?.length > 0 && (
+                    <View style={styles.reaction}>
+                      <Image
+                        style={{ width: 20, height: 20 }}
+                        source={
+                          onLoadImage
+                            ? require(`../../../assets/icons/reactions/angry.png`)
+                            : require(`../../../assets/defaultImage.png`)
+                        }
+                        onLoad={() => imageLoading()}
+                      />
+                      <Text style={{ marginLeft: -2 }}> {numAngrys}</Text>
+                    </View>
+                  )}
+                  {totalReactions > 10 && (
+                    <>
+                      {" "}
+                      <Text> Total</Text>
+                      <Text> {totalReactions}</Text>
+                    </>
+                  )}
                 </View>
               )}
 
-              {post?.comments.length > 0 && (
+              {post?.comments?.length > 0 && (
                 <View style={styles.absoluteRigth}>
-                  <Text>{totalComments}</Text>
+                  <Text> {totalComments}</Text>
                   <Text> Comments</Text>
                 </View>
               )}
@@ -245,11 +377,123 @@ const PostItem = ({ post }) => {
           </View>
         </View>
         <View style={styles.componentsMenu}>
-          <TouchableOpacity style={styles.componentsMenuIcons}>
-            <AntDesign name="like2" size={20} color="#333" />
-            <Text style={[styles.txtDark, styles.fontSmall]}> Like</Text>
-          </TouchableOpacity>
-          {/* Sending object tru route */}
+          <Pressable
+            style={styles.componentsMenuIcons}
+            //  onPress={() => updateLike(post._id)}
+            // delayLongPress={2000}
+            onPress={() => setShowReaction(true)}
+            activeOpacity={0.6}
+          >
+            {userLiked?.length !== 0 ? (
+              <View style={styles.flexRow}>
+                <Image
+                  style={{ width: 20, height: 20 }}
+                  source={require(`../../../assets/icons/reactions/like.png`)}
+                />
+                <Text
+                  style={[
+                    styles.txtDark,
+                    styles.fontSmall,
+                    { fontFamily: "Inter_600SemiBold", color: "#3d6f86" },
+                  ]}
+                >
+                  {" "}
+                  Like
+                </Text>
+              </View>
+            ) : userLoved?.length !== 0 ? (
+              <View style={styles.flexRow}>
+                <Image
+                  style={{ width: 20, height: 20 }}
+                  source={require(`../../../assets/icons/reactions/love.png`)}
+                />
+                <Text
+                  style={[
+                    styles.txtDark,
+                    styles.fontSmall,
+                    { fontFamily: "Inter_600SemiBold", color: "#3d6f86" },
+                  ]}
+                >
+                  {" "}
+                  Love
+                </Text>
+              </View>
+            ) : userWows?.length !== 0 ? (
+              <View style={styles.flexRow}>
+                <Image
+                  style={{ width: 20, height: 20 }}
+                  source={require(`../../../assets/icons/reactions/wow.png`)}
+                />
+                <Text
+                  style={[
+                    styles.txtDark,
+                    styles.fontSmall,
+                    { fontFamily: "Inter_600SemiBold", color: "#3d6f86" },
+                  ]}
+                >
+                  {" "}
+                  Wow
+                </Text>
+              </View>
+            ) : userSads?.length !== 0 ? (
+              <View style={styles.flexRow}>
+                <Image
+                  style={{ width: 20, height: 20 }}
+                  source={require(`../../../assets/icons/reactions/sad.png`)}
+                />
+                <Text
+                  style={[
+                    styles.txtDark,
+                    styles.fontSmall,
+                    { fontFamily: "Inter_600SemiBold", color: "#3d6f86" },
+                  ]}
+                >
+                  {" "}
+                  Sad
+                </Text>
+              </View>
+            ) : userHahas?.length !== 0 ? (
+              <View style={styles.flexRow}>
+                <Image
+                  style={{ width: 20, height: 20 }}
+                  source={require(`../../../assets/icons/reactions/haha.png`)}
+                />
+                <Text
+                  style={[
+                    styles.txtDark,
+                    styles.fontSmall,
+                    { fontFamily: "Inter_600SemiBold", color: "#3d6f86" },
+                  ]}
+                >
+                  {" "}
+                  Haha
+                </Text>
+              </View>
+            ) : userAngrys?.length !== 0 ? (
+              <View style={styles.flexRow}>
+                <Image
+                  style={{ width: 20, height: 20 }}
+                  source={require(`../../../assets/icons/reactions/angry.png`)}
+                />
+                <Text
+                  style={[
+                    styles.txtDark,
+                    styles.fontSmall,
+                    { fontFamily: "Inter_600SemiBold", color: "#3d6f86" },
+                  ]}
+                >
+                  {" "}
+                  Angry
+                </Text>
+              </View>
+            ) : (
+              <View style={styles.flexRow}>
+                <AntDesign name="like2" size={20} color="#333" />
+                <Text style={[styles.txtDark, styles.fontSmall]}> Like</Text>
+              </View>
+            )}
+          </Pressable>
+
           <TouchableOpacity
             style={styles.componentsMenuIcons}
             onPress={() =>
@@ -279,7 +523,11 @@ const styles = StyleSheet.create({
     flex: 1,
     marginVertical: 3,
   },
-
+  flexRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   componentsTitle: {
     backgroundColor: "#fff",
     height: 70,
@@ -299,7 +547,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-
+  reaction: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginRight: 1,
+  },
   PostImage: {
     resizeMode: "contain",
     height: 420,
