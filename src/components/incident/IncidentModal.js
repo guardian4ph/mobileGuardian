@@ -1,3 +1,4 @@
+import React, { useContext, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -10,98 +11,156 @@ import {
   Image,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { Context as ProfileContext } from "../../context/ProfileContext";
+import { Context as AuthContext } from "../../context/AuthContext";
 
-const IncidentModal = (props) => {
-  const handlePress = () => {
-    console.log("Text is Pressed");
-  };
-  const handlePressNo = () => {
-    console.log("NO is Pressed");
-  };
+const IncidentModal = () => {
+  const navigation = useNavigation();
+  const {
+    state: { profile },
+    getCurrentProfile,
+  } = useContext(ProfileContext);
+  const {
+    state: { user },
+  } = useContext(AuthContext);
+
+  useEffect(() => {
+    getCurrentProfile();
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.backBtn}>
-        <TouchableOpacity onPress={() => props.navigation.navigate("Posts")}>
-          <Ionicons name="arrow-back-circle-outline" size={24} color="#333" />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.imageContainer}>
-        <View>
-          <View style={[styles.iconContainer, styles.borderTopLeft]}>
-            <TouchableOpacity>
-              <View>
-                <Image
-                  style={[styles.imgIcon, styles.shadow]}
-                  source={require("../../../assets/icons/incident/Medical.png")}
-                />
-              </View>
-
-              <Text style={[styles.txtWhite, styles.txtPaddingTop]}>
-                Ambulance
+      {!profile ? (
+        <View style={{ alignItems: "center" }}>
+          <View style={[styles.photoContainer, { marginBottom: 20 }]}>
+            <View>
+              <Image
+                style={styles.profileImage}
+                source={require("../../../assets/img/Profile/profile.jpg")}
+              />
+            </View>
+          </View>
+          <Text style={[styles.txtDescription]}>
+            Hi Guardian,{" "}
+            <Text style={[styles.txtName, styles.txtMain]}>
+              {user?.name} {user?.lname}
+            </Text>
+          </Text>
+          <View style={{ flexDirection: "row" }}>
+            <Text style={styles.txtDescription}>Please</Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("CreateProfile")}
+            >
+              <Text style={[styles.txtName, styles.txtMain]}>
+                {" "}
+                Create a Profile
               </Text>
             </TouchableOpacity>
-          </View>
-          <View style={[styles.iconContainer, styles.borderBottomLeft]}>
-            <TouchableOpacity>
-              <View>
-                <Image
-                  style={[styles.imgIcon, styles.shadow]}
-                  source={require("../../../assets/icons/incident/Fire.png")}
-                />
-              </View>
-
-              <Text style={[styles.txtWhite, styles.txtPaddingTop]}>Fire</Text>
-            </TouchableOpacity>
+            <Text style={styles.txtDescription}>
+              {" "}
+              to start sending reports.
+            </Text>
           </View>
         </View>
-        <View>
-          <View style={[styles.iconContainer, styles.borderTopRight]}>
-            <TouchableOpacity>
-              <View>
-                <Image
-                  style={[styles.imgIcon, styles.shadow]}
-                  source={require("../../../assets/icons/incident/Crime.png")}
-                />
-              </View>
-
-              <Text style={[styles.txtWhite, styles.txtPaddingTop]}>
-                Police
-              </Text>
+      ) : (
+        <>
+          <View style={styles.backBtn}>
+            <TouchableOpacity onPress={() => navigation.navigate("Posts")}>
+              <Ionicons
+                name="arrow-back-circle-outline"
+                size={24}
+                color="#333"
+              />
             </TouchableOpacity>
           </View>
-          <View style={[styles.iconContainer, styles.borderBottomRight]}>
-            <TouchableOpacity>
-              <View>
-                <Image
-                  style={[styles.imgIcon, styles.shadow]}
-                  source={require("../../../assets/icons/incident/Call.png")}
-                />
-              </View>
+          <View style={styles.imageContainer}>
+            <View>
+              <View style={[styles.iconContainer, styles.borderTopLeft]}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("IncidentCreate", {
+                      type: "Medical",
+                    })
+                  }
+                >
+                  <View>
+                    <Image
+                      style={[styles.imgIcon, styles.shadow]}
+                      source={require("../../../assets/icons/incident/Medical.png")}
+                    />
+                  </View>
 
-              <Text style={[styles.txtWhite, styles.txtPaddingTop]}>
-                General
-              </Text>
-            </TouchableOpacity>
+                  <Text style={[styles.txtWhite, styles.txtPaddingTop]}>
+                    Ambulance
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View style={[styles.iconContainer, styles.borderBottomLeft]}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("IncidentCreate", {
+                      type: "Fire",
+                    })
+                  }
+                >
+                  <View>
+                    <Image
+                      style={[styles.imgIcon, styles.shadow]}
+                      source={require("../../../assets/icons/incident/Fire.png")}
+                    />
+                  </View>
+
+                  <Text style={[styles.txtWhite, styles.txtPaddingTop]}>
+                    Fire
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View>
+              <View style={[styles.iconContainer, styles.borderTopRight]}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("IncidentCreate", {
+                      type: "Crime",
+                    })
+                  }
+                >
+                  <View>
+                    <Image
+                      style={[styles.imgIcon, styles.shadow]}
+                      source={require("../../../assets/icons/incident/Crime.png")}
+                    />
+                  </View>
+
+                  <Text style={[styles.txtWhite, styles.txtPaddingTop]}>
+                    Police
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View style={[styles.iconContainer, styles.borderBottomRight]}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("IncidentCreate", {
+                      type: "General",
+                    })
+                  }
+                >
+                  <View>
+                    <Image
+                      style={[styles.imgIcon, styles.shadow]}
+                      source={require("../../../assets/icons/incident/Call.png")}
+                    />
+                  </View>
+
+                  <Text style={[styles.txtWhite, styles.txtPaddingTop]}>
+                    General
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
-        </View>
-      </View>
-      <TouchableOpacity></TouchableOpacity>
-      {/* <Text
-        style={styles.txtWhite}
-        numberOfLines={3}
-        onPress={() => {
-          // alert("Test");
-          // handlePress();
-          Alert.alert("This is an allert", "are you sure?", [
-            { text: "Yes", onPress: () => handlePress() },
-            { text: "No", onPress: () => handlePressNo() },
-          ]);
-        }}
-      >
-        welcome! cloyd cloyd clyds welcome! cloyd cloyd clyds welcome! cloyd
-        cloyd clyds welcome! cloyd cloyd clyds welcome! cloyd cloyd clyds{" "}
-        welcome! cloyd cloyd clyds welcome! cloyd cloyd clyds{" "}
-      </Text> */}
+        </>
+      )}
     </SafeAreaView>
   );
 };
@@ -126,6 +185,32 @@ const styles = StyleSheet.create({
   },
   txtPaddingTop: {
     paddingTop: 8,
+  },
+  txtName: {
+    fontSize: 16,
+    fontFamily: "Inter_600SemiBold",
+    letterSpacing: 0.1,
+  },
+  txtDescription: {
+    fontSize: 16,
+    fontFamily: "Inter_400Regular",
+    letterSpacing: 0.1,
+  },
+  txtMain: {
+    color: "#215a75",
+  },
+  photoContainer: {
+    width: 150,
+    height: 150,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 300,
+    backgroundColor: "#215a75",
+  },
+  profileImage: {
+    width: 140,
+    height: 140,
+    borderRadius: 300,
   },
   backBtn: {
     position: "absolute",

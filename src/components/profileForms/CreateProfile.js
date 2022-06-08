@@ -88,7 +88,7 @@ const CreateProfile = ({ navigation }) => {
     }
     setshowDate(true);
   };
-
+  const [errorMsg, setErrorMsg] = useState(null);
   // Map size
   const toggleMap = () => {
     if (mapSize === true) {

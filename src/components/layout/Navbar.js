@@ -39,14 +39,8 @@ const Navbar = (props) => {
           </TouchableOpacity>
           <Text style={[styles.txtWhite, styles.btnContent]}>Notification</Text>
         </View>
-        {/* <View style={styles.componentsContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate("Landing")}>
-            <Feather name="message-square" size={24} color="#fff" />
-          </TouchableOpacity>
-          <Text style={[styles.txtWhite, styles.btnContent]}>Messages</Text>
-        </View> */}
+
         <View style={styles.componentsContainer}>
-          {/* <TouchableOpacity onPress={() => logout()}> */}
           <TouchableOpacity onPress={() => navigation.navigate("Spinner")}>
             <Ionicons name="person-circle-outline" size={24} color="#fff" />
           </TouchableOpacity>

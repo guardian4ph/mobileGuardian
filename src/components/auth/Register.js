@@ -11,11 +11,14 @@ import { Feather } from "@expo/vector-icons";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import { Context as AuthContext } from "../../context/AuthContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import Alert from "../layout/Alert";
+import { io } from "socket.io-client";
+
+const ENDPOINT = "http://10.128.50.114:5000";
 
 const Register = ({ navigation }) => {
-  const { state, registerUser, storageLogin, remove_error } =
+  const socket = io(ENDPOINT);
+  const { state, registerUser, remove_error, loadUser } =
     useContext(AuthContext);
   const [name, setName] = useState("");
   const [lname, setLname] = useState("");
@@ -37,27 +40,16 @@ const Register = ({ navigation }) => {
     }
   };
 
-  const [token, setToken] = useState("");
-  const getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem("token");
-      if (value !== null) {
-        setToken(value);
-        storageLogin();
-        navigation.navigate("Posts");
-      }
-    } catch (err) {
-      console.log("Error", err);
-    }
-  };
-
-  useEffect(() => {
-    getData();
-  }, [token]);
-
   useEffect(() => {
     if (state?.token) {
+      loadUser();
       navigation.navigate("Posts");
+    }
+  }, [state.token]);
+
+  useEffect(() => {
+    if (state?.user) {
+      socket.emit("addUser", state?.user._id);
     }
   }, [state]);
 

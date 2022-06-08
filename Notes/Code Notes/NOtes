@@ -1,0 +1,105 @@
+<View>
+        <View style={styles.subContainer}>
+          <View style={{ alignItems: "center" }}>
+            <View style={styles.componentsContainer}>
+              <View
+                style={{
+                  paddingVertical: 18,
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={[
+                    styles.txtMain,
+                    {
+                      textAlign: "center",
+                      width: "100%",
+                      fontSize: 20,
+                    },
+                  ]}
+                >
+                  Send incident of type{" "}
+                  <Text style={{ color: "red" }}> "{route.params.type}"</Text>
+                </Text>
+              </View>
+
+              {/* Map Here ---------------------------------- */}
+              {location && (
+                <View
+                  style={
+                    mapSize ? styles.mapContainer : styles.mapContainerLarge
+                  }
+                >
+                  <View
+                    style={{
+                      position: "absolute",
+                      top: 10,
+                      right: 10,
+                      zIndex: 10,
+                    }}
+                  >
+                    <TouchableOpacity onPress={toggleMap}>
+                      <MaterialIcons
+                        name="fullscreen"
+                        size={30}
+                        color="#215a75"
+                      />
+                    </TouchableOpacity>
+                  </View>
+
+                  <Map location={location} setNameAddress={setNameAddress} />
+                </View>
+              )}
+              <View
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  paddingTop: 10,
+                }}
+              >
+                <Text
+                  style={[
+                    styles.txtMain,
+                    {
+                      textAlign: "center",
+                      width: "100%",
+                      fontSize: 20,
+                      color: "#dc3545",
+                    },
+                  ]}
+                >
+                  Please confirm your location...
+                </Text>
+              </View>
+              <Text
+                style={{
+                  fontSize: 18,
+                  textAlign: "center",
+                  paddingVertical: 10,
+                }}
+                numberOfLines={2}
+                ellipsizeMode="tail"
+              >
+                {" "}
+                {nameAddress.completeaddress}
+              </Text>
+            </View>
+          </View>
+
+          <View style={{ alignItems: "center", justifyContent: "center" }}>
+            <TouchableOpacity
+              style={[styles.btnView, styles.btnMain]}
+              onPress={() => onSubmit()}
+            >
+              <Text style={[styles.btnContent, styles.txtWhite]}>
+                Send Report
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.btnView, styles.btnDanger, { marginBottom: 20 }]}
+              onPress={() => onSubmit()}
+            >
+              <Text style={[styles.btnContent, styles.txtWhite]}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>

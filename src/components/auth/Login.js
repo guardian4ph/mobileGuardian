@@ -18,11 +18,14 @@ import {
 import { TextInput } from "react-native-gesture-handler";
 import { Ionicons, EvilIcons } from "@expo/vector-icons";
 import { Context as AuthContext } from "../../context/AuthContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import Alert from "../layout/Alert";
 import Spinner from "../layout/Spinner";
+import { io } from "socket.io-client";
+
+const ENDPOINT = "http://10.128.50.114:5000";
 
 const Login = ({ navigation }) => {
+  const socket = io(ENDPOINT);
   let [fontsLoaded] = useFonts({
     Inter_300Light,
     Inter_200ExtraLight,
@@ -43,32 +46,18 @@ const Login = ({ navigation }) => {
     setPasswordType(true);
   };
 
-  const [token, setToken] = useState("");
-
-  const getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem("token");
-      if (value !== null) {
-        setToken(value);
-        storageLogin();
-        loadUser();
-        navigation.navigate("Posts");
-      }
-    } catch (err) {
-      console.log("Error", err);
-    }
-  };
-
-  useEffect(() => {
-    getData();
-  }, [token]);
-
   useEffect(() => {
     if (state?.token) {
       loadUser();
       navigation.navigate("Posts");
     }
   }, [state.token]);
+
+  useEffect(() => {
+    if (state?.user) {
+      socket.emit("addUser", state?.user._id);
+    }
+  }, [state]);
 
   const onSubmit = async () => {
     try {

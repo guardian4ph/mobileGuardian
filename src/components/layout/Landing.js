@@ -18,9 +18,14 @@ import {
 import { Context as AuthContext } from "../../context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Spinner from "./Spinner";
+import { io } from "socket.io-client";
+
+const ENDPOINT = "http://10.128.50.114:5000";
 
 const Landing = () => {
+  const socket = io(ENDPOINT);
   const { state, loadUser, storageLogin } = useContext(AuthContext);
+  const [userSocket, setUserSocket] = useState(false);
 
   let [fontsLoaded] = useFonts({
     Inter_300Light,
@@ -38,7 +43,7 @@ const Landing = () => {
       if (value !== null) {
         setToken(value);
         storageLogin();
-        loadUser();
+        setUserSocket(true);
         navigation.navigate("Posts");
       }
     } catch (err) {
@@ -53,6 +58,12 @@ const Landing = () => {
   useEffect(() => {
     if (state?.token) {
       navigation.navigate("Posts");
+    }
+  }, [state]);
+
+  useEffect(() => {
+    if (state?.user) {
+      socket.emit("addUser", state?.user._id);
     }
   }, [state]);
 
