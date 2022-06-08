@@ -26,7 +26,7 @@ import { Video } from "expo-av";
 import { captureRef } from "react-native-view-shot";
 import Reaction from "../post/Reaction";
 
-const PostItem = ({ onPress, post }) => {
+const PostItem = ({ post }) => {
   const viewRef = useRef();
   const navigation = useNavigation();
   const {
@@ -111,7 +111,7 @@ const PostItem = ({ onPress, post }) => {
     setNumSads(numFormatter(post?.sads?.length));
     setNumHahas(numFormatter(post?.hahas?.length));
     setNumAngrys(numFormatter(post?.angrys?.length));
-  }, [post, onPress]);
+  }, [post]);
 
   const totalComments = numFormatter(post?.comments.length);
 
@@ -251,7 +251,6 @@ const PostItem = ({ onPress, post }) => {
           </View>
           {showReaction ? (
             <Reaction
-              onPress={onPress}
               _id={post?._id}
               showReaction
               userLiked={userLiked}

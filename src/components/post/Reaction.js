@@ -13,7 +13,6 @@ const Reaction = ({
   userSads,
   userHahas,
   userAngrys,
-  onPress,
 }) => {
   const {
     addLike,
@@ -49,12 +48,6 @@ const Reaction = ({
     [userLiked, userAngrys, userHahas, userLoved, userSads, userWows]
   );
 
-  const sentPressed = () => {
-    if (onPress) {
-      onPress();
-    }
-  };
-
   if (!showReaction) {
     return null;
   }
@@ -69,7 +62,6 @@ const Reaction = ({
             }, 1000);
 
             onClose();
-            sentPressed();
           }}
         >
           <Image
