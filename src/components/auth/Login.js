@@ -20,12 +20,9 @@ import { Ionicons, EvilIcons } from "@expo/vector-icons";
 import { Context as AuthContext } from "../../context/AuthContext";
 import Alert from "../layout/Alert";
 import Spinner from "../layout/Spinner";
-import { io } from "socket.io-client";
-
-const ENDPOINT = "http://10.128.50.114:5000";
+import socket from "../socket/Socket";
 
 const Login = ({ navigation }) => {
-  const socket = io(ENDPOINT);
   let [fontsLoaded] = useFonts({
     Inter_300Light,
     Inter_200ExtraLight,

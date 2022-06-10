@@ -7,48 +7,81 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import ActiveVisual from "./ActiveVisual";
 import ActiveDetails from "./ActiveDetails";
 import ActiveComms from "./ActiveComms";
 import ActiveETA from "./ActiveETA";
 import ActiveStatus from "./ActiveStatus";
-
+import socket from "../socket/Socket";
 import { useNavigation } from "@react-navigation/native";
+import { Context as IncidentConText } from "../../context/IncidentContext";
+import { Context as ResponderConText } from "../../context/ResponderContext";
+import Spinner from "../layout/Spinner";
 
 const ActiveIncident = () => {
   const navigation = useNavigation();
+  const { state: incident, loading } = useContext(IncidentConText);
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView
-        style={styles.subContainer}
-        behavior={Platform.OS === "ios" ? "padding" : null}
-      >
-        <ActiveVisual />
-        <ActiveStatus />
-        <ActiveDetails />
-        <ActiveComms />
-        <ActiveETA />
+  const [answeredBy, setAnsweredBy] = useState("");
+  const [callAnswered, setCallAnswered] = useState(false);
 
-        <View
-          style={{
-            alignItems: "center",
-            justifyContent: "center",
-            width: "100%",
-            marginTop: 5,
-          }}
+  const {
+    state: { responder },
+    getResponderbyUserId,
+  } = useContext(ResponderConText);
+
+  useEffect(() => {
+    getResponderbyUserId(answeredBy.dispatcher_userId);
+  }, [answeredBy]);
+
+  useEffect(() => {
+    socket.on("getCallHandled", (data) => {
+      setAnsweredBy({
+        incidentId: data.incidentId,
+        dispatcher_userId: data.dispatcher_userId,
+        time_received: data.time_received,
+        name: data.name,
+        lname: data.lname,
+      });
+      setCallAnswered(true);
+    });
+  }, []);
+
+  if (!callAnswered) {
+    return <Spinner />;
+  } else {
+    return (
+      <SafeAreaView style={styles.container}>
+        <KeyboardAvoidingView
+          style={styles.subContainer}
+          behavior={Platform.OS === "ios" ? "padding" : null}
         >
-          <TouchableOpacity
-            style={[styles.btnView, styles.btnDanger]}
-            onPress={() => navigation.goBack()}
+          <ActiveVisual answeredBy={answeredBy} incident={incident.incident} />
+          <ActiveStatus incident={incident.incident} />
+          <ActiveDetails incident={incident.incident} />
+          <ActiveComms incident={incident.incident} />
+          <ActiveETA responder={responder} />
+
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+              marginTop: 5,
+            }}
           >
-            <Text style={[styles.btnContent, styles.txtWhite]}>Cancel</Text>
-          </TouchableOpacity>
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
-  );
+            <TouchableOpacity
+              style={[styles.btnView, styles.btnDanger]}
+              onPress={() => navigation.goBack()}
+            >
+              <Text style={[styles.btnContent, styles.txtWhite]}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    );
+  }
 };
 const styles = StyleSheet.create({
   container: {

@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 
-const ActiveDetails = () => {
+const ActiveDetails = ({ incident }) => {
   return (
     <View style={styles.container}>
       <Text
@@ -15,7 +15,7 @@ const ActiveDetails = () => {
         numberOfLines={2}
         ellipsizeMode="tail"
       >
-        127 Eskina duol, dapit sa Inyo, Barangay Uno, Mandaue City, Philippines
+        {incident.scompleteaddress}
       </Text>
       <Text style={{ color: "#dc3545", letterSpacing: 0.5, paddingTop: 5 }}>
         LOCATION

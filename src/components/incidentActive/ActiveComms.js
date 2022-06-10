@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Feather } from "@expo/vector-icons";
+import Spinner from "../layout/Spinner";
 
 const ActiveComms = () => {
   return (
@@ -12,6 +13,7 @@ const ActiveComms = () => {
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff",

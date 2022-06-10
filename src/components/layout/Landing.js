@@ -18,12 +18,9 @@ import {
 import { Context as AuthContext } from "../../context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Spinner from "./Spinner";
-import { io } from "socket.io-client";
-
-const ENDPOINT = "http://10.128.50.114:5000";
+import socket from "../socket/Socket";
 
 const Landing = () => {
-  const socket = io(ENDPOINT);
   const { state, loadUser, storageLogin } = useContext(AuthContext);
   const [userSocket, setUserSocket] = useState(false);
 
@@ -36,6 +33,12 @@ const Landing = () => {
   const navigation = useNavigation();
 
   const [token, setToken] = useState("");
+  useEffect(() => {
+    socket.on("messageFromServer", (data) => {
+      console.log(data);
+      console.log(socket.id);
+    });
+  }, []);
 
   const getData = async () => {
     try {

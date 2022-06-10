@@ -12,17 +12,17 @@ import { useNavigation } from "@react-navigation/native";
 import Map from "../utilitize/Map";
 import * as Location from "expo-location";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { io } from "socket.io-client";
 import { Context as AuthContext } from "../../context/AuthContext";
 import { Context as IncidentConText } from "../../context/IncidentContext";
 import moment from "moment";
-
-const ENDPOINT = "http://10.128.50.114:5000";
+import socket from "../socket/Socket";
 
 const IncidentCreate = ({ route }) => {
-  const socket = io(ENDPOINT);
-
-  const { state, submitIncident, missedCall } = useContext(IncidentConText);
+  const {
+    state: { createIncident, incident },
+    submitIncident,
+    missedCall,
+  } = useContext(IncidentConText);
   const {
     state: { user },
   } = useContext(AuthContext);
@@ -32,6 +32,7 @@ const IncidentCreate = ({ route }) => {
   const [mapSize, setMapSize] = useState(true);
   const [errorMsg, setErrorMsg] = useState(null);
   const [supportedAddress, setSupportAddress] = useState("");
+
   const [nameAddress, setNameAddress] = useState({
     completeaddress: "",
     city: "",
@@ -74,7 +75,6 @@ const IncidentCreate = ({ route }) => {
     socket.emit("online_Dispatchers", { data: "Request online dispatchers" });
   }, []);
 
-  console.log("ReportedDate", moment());
   const reportedDate = moment.utc();
 
   const onSubmit = async () => {
@@ -141,6 +141,12 @@ const IncidentCreate = ({ route }) => {
       console.log("Area not supported");
     }
   };
+
+  useEffect(() => {
+    if (createIncident && incident !== null) {
+      navigation.navigate("ActiveIncident");
+    }
+  }, [createIncident]);
 
   return (
     <SafeAreaView style={styles.container}>

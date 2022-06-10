@@ -12,12 +12,9 @@ import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import { Context as AuthContext } from "../../context/AuthContext";
 import Alert from "../layout/Alert";
-import { io } from "socket.io-client";
-
-const ENDPOINT = "http://10.128.50.114:5000";
+import socket from "../socket/Socket";
 
 const Register = ({ navigation }) => {
-  const socket = io(ENDPOINT);
   const { state, registerUser, remove_error, loadUser } =
     useContext(AuthContext);
   const [name, setName] = useState("");

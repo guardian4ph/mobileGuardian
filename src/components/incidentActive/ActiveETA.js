@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, Image } from "react-native";
-import React from "react";
+import React, { useContext, useEffect } from "react";
 
-const ActiveETA = () => {
+const ActiveETA = ({ responder }) => {
   return (
     <View style={styles.container}>
       <View
@@ -27,7 +27,7 @@ const ActiveETA = () => {
           ellipsizeMode="tail"
         >
           {" "}
-          Mandaue City Command Center
+          {responder[0].opcen.name}
         </Text>
       </View>
       <Text style={{ color: "#dc3545", letterSpacing: 0.5 }}>

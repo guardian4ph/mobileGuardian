@@ -19,6 +19,7 @@ import { Provider as AlertProvider } from "./src/context/AlertContext";
 import { Provider as AnnouncementProvider } from "./src/context/AnnouncementContext";
 import { Provider as PostProvider } from "./src/context/PostContext";
 import { Provider as IncidentProvider } from "./src/context/IncidentContext.js";
+import { Provider as ResponderProvider } from "./src/context/ResponderContext";
 import Profile from "./src/components/profile/Profile";
 import Messages from "./src/components/messages/Messages";
 import CreateProfile from "./src/components/profileForms/CreateProfile";
@@ -36,66 +37,71 @@ const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <IncidentProvider>
-      <PostProvider>
-        <AnnouncementProvider>
-          <ProfileProvider>
-            <AlertProvider>
-              <AuthProvider>
-                <NavigationContainer>
-                  <Stack.Navigator
-                    screenOptions={{
-                      headerShown: false,
-                    }}
-                    initialRouteName={"Landing"}
-                  >
-                    <Stack.Screen name="Landing" component={Landing} />
-                    <Stack.Screen
-                      name="IncidentModal"
-                      component={IncidentModal}
-                    />
-                    <Stack.Screen name="Register" component={Register} />
-                    <Stack.Screen name="Login" component={Login} />
-                    <Stack.Screen name="Privacy" component={Privacy} />
-                    <Stack.Screen name="Terms" component={Terms} />
-                    <Stack.Screen
-                      name="AddEducation"
-                      component={AddEducation}
-                    />
-                    <Stack.Screen
-                      name="AddExperience"
-                      component={AddExperience}
-                    />
-                    <Stack.Screen name="ForgotPass" component={ForgotPass} />
-                    <Stack.Screen name="Otp" component={Otp} />
-                    <Stack.Screen name="SinglePost" component={SinglePost} />
-                    <Stack.Screen name="Posts" component={Posts} />
-                    <Stack.Screen name="ID" component={ID} />
-                    <Stack.Screen name="QrPhoto" component={QrPhoto} />
-                    <Stack.Screen name="Profile" component={Profile} />
-                    <Stack.Screen name="Messages" component={Messages} />
-                    <Stack.Screen
-                      name="CreateProfile"
-                      component={CreateProfile}
-                    />
-                    <Stack.Screen name="EditProfile" component={EditProfile} />
-                    <Stack.Screen
-                      name="IncidentCreate"
-                      component={IncidentCreate}
-                    />
-                    <Stack.Screen
-                      name="ActiveIncident"
-                      component={ActiveIncident}
-                    />
-                    <Stack.Screen name="Spinner" component={Spinner} />
-                    <Stack.Screen name="Setting" component={Setting} />
-                  </Stack.Navigator>
-                </NavigationContainer>
-              </AuthProvider>
-            </AlertProvider>
-          </ProfileProvider>
-        </AnnouncementProvider>
-      </PostProvider>
-    </IncidentProvider>
+    <ResponderProvider>
+      <IncidentProvider>
+        <PostProvider>
+          <AnnouncementProvider>
+            <ProfileProvider>
+              <AlertProvider>
+                <AuthProvider>
+                  <NavigationContainer>
+                    <Stack.Navigator
+                      screenOptions={{
+                        headerShown: false,
+                      }}
+                      initialRouteName={"Landing"}
+                    >
+                      <Stack.Screen name="Landing" component={Landing} />
+                      <Stack.Screen
+                        name="IncidentModal"
+                        component={IncidentModal}
+                      />
+                      <Stack.Screen name="Register" component={Register} />
+                      <Stack.Screen name="Login" component={Login} />
+                      <Stack.Screen name="Privacy" component={Privacy} />
+                      <Stack.Screen name="Terms" component={Terms} />
+                      <Stack.Screen
+                        name="AddEducation"
+                        component={AddEducation}
+                      />
+                      <Stack.Screen
+                        name="AddExperience"
+                        component={AddExperience}
+                      />
+                      <Stack.Screen name="ForgotPass" component={ForgotPass} />
+                      <Stack.Screen name="Otp" component={Otp} />
+                      <Stack.Screen name="SinglePost" component={SinglePost} />
+                      <Stack.Screen name="Posts" component={Posts} />
+                      <Stack.Screen name="ID" component={ID} />
+                      <Stack.Screen name="QrPhoto" component={QrPhoto} />
+                      <Stack.Screen name="Profile" component={Profile} />
+                      <Stack.Screen name="Messages" component={Messages} />
+                      <Stack.Screen
+                        name="CreateProfile"
+                        component={CreateProfile}
+                      />
+                      <Stack.Screen
+                        name="EditProfile"
+                        component={EditProfile}
+                      />
+                      <Stack.Screen
+                        name="IncidentCreate"
+                        component={IncidentCreate}
+                      />
+                      <Stack.Screen
+                        name="ActiveIncident"
+                        component={ActiveIncident}
+                      />
+                      <Stack.Screen name="Spinner" component={Spinner} />
+                      <Stack.Screen name="Setting" component={Setting} />
+                    </Stack.Navigator>
+                  </NavigationContainer>
+                </AuthProvider>
+              </AlertProvider>
+            </ProfileProvider>
+          </AnnouncementProvider>
+        </PostProvider>
+      </IncidentProvider>
+    </ResponderProvider>
   );
 }
