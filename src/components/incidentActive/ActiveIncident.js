@@ -18,22 +18,25 @@ import { useNavigation } from "@react-navigation/native";
 import { Context as IncidentConText } from "../../context/IncidentContext";
 import { Context as ResponderConText } from "../../context/ResponderContext";
 import Spinner from "../layout/Spinner";
+import CancelModal from "../incidentActive/CancelModal";
 
 const ActiveIncident = () => {
   const navigation = useNavigation();
-  const { state: incident, loading } = useContext(IncidentConText);
+  const [incidentClose, setIncidentClose] = useState(false);
 
+  const {
+    state: { incident, loading, cancelled },
+    incidentCancelled,
+  } = useContext(IncidentConText);
+  const [showCancel, setShowCancel] = useState(false);
   const [answeredBy, setAnsweredBy] = useState("");
   const [callAnswered, setCallAnswered] = useState(false);
 
+  console.log("Incident Cancelled -------------------->", cancelled);
   const {
     state: { responder },
     getResponderbyUserId,
   } = useContext(ResponderConText);
-
-  useEffect(() => {
-    getResponderbyUserId(answeredBy.dispatcher_userId);
-  }, [answeredBy]);
 
   useEffect(() => {
     socket.on("getCallHandled", (data) => {
@@ -47,20 +50,32 @@ const ActiveIncident = () => {
       setCallAnswered(true);
     });
   }, []);
+  useEffect(() => {
+    getResponderbyUserId(answeredBy?.dispatcher_userId);
+  }, [answeredBy]);
 
-  if (!callAnswered) {
+  useEffect(() => {
+    if (incidentClose || cancelled) {
+      const timer = setTimeout(() => {
+        navigation.navigate("Posts");
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [cancelled, incidentClose]);
+
+  if (!callAnswered || loading) {
     return <Spinner />;
   } else {
     return (
-      <SafeAreaView style={styles.container}>
-        <KeyboardAvoidingView
+      <View style={styles.container}>
+        <View
           style={styles.subContainer}
           behavior={Platform.OS === "ios" ? "padding" : null}
         >
-          <ActiveVisual answeredBy={answeredBy} incident={incident.incident} />
-          <ActiveStatus incident={incident.incident} />
-          <ActiveDetails incident={incident.incident} />
-          <ActiveComms incident={incident.incident} />
+          <ActiveVisual answeredBy={answeredBy} incident={incident} />
+          <ActiveStatus incident={incident} />
+          <ActiveDetails incident={incident} />
+          <ActiveComms incident={incident} />
           <ActiveETA responder={responder} />
 
           <View
@@ -73,13 +88,21 @@ const ActiveIncident = () => {
           >
             <TouchableOpacity
               style={[styles.btnView, styles.btnDanger]}
-              onPress={() => navigation.goBack()}
+              onPress={() => setShowCancel(true)}
             >
               <Text style={[styles.btnContent, styles.txtWhite]}>Cancel</Text>
             </TouchableOpacity>
           </View>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
+        </View>
+        <CancelModal
+          socket={socket}
+          show={showCancel}
+          onClose={() => setShowCancel(false)}
+          incidentCancelled={incidentCancelled}
+          responder={responder}
+          incident={incident}
+        />
+      </View>
     );
   }
 };

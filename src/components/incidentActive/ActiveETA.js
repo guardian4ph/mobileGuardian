@@ -1,40 +1,45 @@
 import { View, Text, StyleSheet, Image } from "react-native";
 import React, { useContext, useEffect } from "react";
+import Spinner from "../layout/Spinner";
 
 const ActiveETA = ({ responder }) => {
-  return (
-    <View style={styles.container}>
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Image
-          style={styles.opcenImage}
-          source={require("../../../assets/logos/mandaue.png")}
-        />
-        <Text
+  if (!responder) {
+    return <Spinner />;
+  } else {
+    return (
+      <View style={styles.container}>
+        <View
           style={{
-            fontSize: 20,
-            letterSpacing: 0.3,
-            textAlign: "center",
-            paddingHorizontal: 10,
-            color: "#333",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
           }}
-          numberOfLines={2}
-          ellipsizeMode="tail"
         >
-          {" "}
-          {responder[0].opcen.name}
+          <Image
+            style={styles.opcenImage}
+            source={require("../../../assets/logos/mandaue.png")}
+          />
+          <Text
+            style={{
+              fontSize: 20,
+              letterSpacing: 0.3,
+              textAlign: "center",
+              paddingHorizontal: 10,
+              color: "#333",
+            }}
+            numberOfLines={2}
+            ellipsizeMode="tail"
+          >
+            {" "}
+            {responder[0]?.opcen.name}
+          </Text>
+        </View>
+        <Text style={{ color: "#dc3545", letterSpacing: 0.5 }}>
+          OPERATION CENTER
         </Text>
       </View>
-      <Text style={{ color: "#dc3545", letterSpacing: 0.5 }}>
-        OPERATION CENTER
-      </Text>
-    </View>
-  );
+    );
+  }
 };
 
 const styles = StyleSheet.create({

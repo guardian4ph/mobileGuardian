@@ -16,6 +16,12 @@ const IncidentReducer = (state, action) => {
         missedCall: action.payload, //from the action file
         loading: false,
       };
+    case "incidentCancelled":
+      return {
+        ...state,
+        cancelled: action.payload,
+        loading: false,
+      };
     case "add_error":
       return { ...state, errorMessage: action.payload };
     default:
@@ -118,14 +124,40 @@ const missedCall =
     }
   };
 
+const incidentCancelled =
+  (dispatch) =>
+  async ({ incidentId, reportedby_userId, reason }) => {
+    try {
+      const res = await axios.post(
+        "http://10.128.50.114:5000/api/incident/incident_cancelled",
+        {
+          incidentId,
+          reportedby_userId,
+          reason,
+        }
+      );
+      dispatch({
+        type: "incidentCancelled",
+        payload: true,
+      });
+      console.log("Incident Cancelled");
+    } catch (err) {
+      dispatch({
+        type: "add_error",
+        payload: err.msg,
+      });
+    }
+  };
+
 export const { Provider, Context } = createDataContext(
   IncidentReducer,
-  { submitIncident, missedCall },
+  { submitIncident, missedCall, incidentCancelled },
   {
     createIncident: false,
     incident: null,
     inicidents: null,
     loading: true,
+    cancelled: null,
     errorMessage: "",
   }
 );

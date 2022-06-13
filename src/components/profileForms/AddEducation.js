@@ -84,7 +84,13 @@ const AddEducation = ({ navigation }) => {
           />
         </TouchableOpacity>
       </View>
-      {showAlert ? <Alert msg={"Education added"} type={"success"} /> : null}
+      {showAlert ? (
+        <Alert
+          msg={"Education added"}
+          type={"success"}
+          onClose={() => setShowAlert(false)}
+        />
+      ) : null}
       <KeyboardAvoidingView
         style={styles.subContainer}
         behavior={Platform.OS === "ios" ? "padding" : null}

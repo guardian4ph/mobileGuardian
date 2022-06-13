@@ -15,7 +15,7 @@ const ActiveDetails = ({ incident }) => {
         numberOfLines={2}
         ellipsizeMode="tail"
       >
-        {incident.scompleteaddress}
+        {incident?.scompleteaddress}
       </Text>
       <Text style={{ color: "#dc3545", letterSpacing: 0.5, paddingTop: 5 }}>
         LOCATION

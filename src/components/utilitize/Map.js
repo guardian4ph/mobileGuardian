@@ -93,6 +93,7 @@ const Map = ({ location, setNameAddress }) => {
           provider={PROVIDER_GOOGLE}
           initialRegion={region}
           onRegionChangeComplete={(region) => setRegion(region)}
+          loadingEnabled={true}
         >
           <Marker coordinate={region}>
             <Image

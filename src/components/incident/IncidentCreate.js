@@ -16,6 +16,8 @@ import { Context as AuthContext } from "../../context/AuthContext";
 import { Context as IncidentConText } from "../../context/IncidentContext";
 import moment from "moment";
 import socket from "../socket/Socket";
+import Alert from "../layout/Alert";
+import Spinner from "../layout/Spinner";
 
 const IncidentCreate = ({ route }) => {
   const {
@@ -31,7 +33,8 @@ const IncidentCreate = ({ route }) => {
   const [location, setLocation] = useState(null);
   const [mapSize, setMapSize] = useState(true);
   const [errorMsg, setErrorMsg] = useState(null);
-  const [supportedAddress, setSupportAddress] = useState("");
+  const [notSupported, setNotSupported] = useState(false);
+  const [engage, setEngage] = useState(false);
 
   const [nameAddress, setNameAddress] = useState({
     completeaddress: "",
@@ -116,7 +119,7 @@ const IncidentCreate = ({ route }) => {
           reportedDate,
         });
       } else {
-        console.log("All dispatchers are engage to a call...");
+        setEngage(true);
         // Missed call/incident save
         missedCall({
           user: user._id,
@@ -136,9 +139,7 @@ const IncidentCreate = ({ route }) => {
       }
       // Check here if theres an opcen near and is online if not flag error
     } else {
-      // setShow(true);
-      // setSupportAddress(scompleteaddress);
-      console.log("Area not supported");
+      setNotSupported(true);
     }
   };
 
@@ -150,11 +151,24 @@ const IncidentCreate = ({ route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.backBtn}>
+      {engage ? (
+        <Alert
+          msg={"All dispatchers are engage to a call..."}
+          type={"Engage"}
+          onClose={() => setEngage(false)}
+        />
+      ) : notSupported ? (
+        <Alert
+          msg={"Area not supported"}
+          type={"NotSupported"}
+          onClose={() => setNotSupported(false)}
+        />
+      ) : null}
+      {/* <View style={styles.backBtn}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back-circle-outline" size={24} color="#fff" />
         </TouchableOpacity>
-      </View>
+      </View> */}
 
       <View style={styles.componentsContainer}>
         <View
@@ -176,9 +190,10 @@ const IncidentCreate = ({ route }) => {
             Send incident of type{" "}
             <Text style={{ color: "#dc3545" }}> "{route.params.type}"</Text>
           </Text>
+          <Text> (Map marker SHOWS your current location.)</Text>
         </View>
         <>
-          {location && (
+          {location ? (
             <View
               style={mapSize ? styles.mapContainer : styles.mapContainerLarge}
             >
@@ -196,6 +211,12 @@ const IncidentCreate = ({ route }) => {
               </View>
 
               <Map location={location} setNameAddress={setNameAddress} />
+            </View>
+          ) : (
+            <View
+              style={mapSize ? styles.mapContainer : styles.mapContainerLarge}
+            >
+              <Spinner />
             </View>
           )}
         </>
@@ -290,8 +311,10 @@ const styles = StyleSheet.create({
     position: "relative",
     height: 280,
     width: "92%",
+    zIndex: 10,
     ...Platform.select({
       ios: {
+        height: Dimensions.get("screen").width,
         shadowColor: "#215a75",
         shadowOffset: { width: 0, height: 0 },
         shadowRadius: 5,
@@ -309,6 +332,7 @@ const styles = StyleSheet.create({
     width: "92%",
     ...Platform.select({
       ios: {
+        height: Dimensions.get("screen").width + 50,
         shadowColor: "#215a75",
         shadowOffset: { width: 0, height: 0 },
         shadowRadius: 5,

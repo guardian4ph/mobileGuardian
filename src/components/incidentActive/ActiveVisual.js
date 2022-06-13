@@ -18,7 +18,6 @@ const ActiveVisual = ({ answeredBy, incident }) => {
     }
   }, [responder]);
 
-  console.log("Responder Profile", responderProfile.profilee);
   return (
     <View style={styles.container}>
       <View style={{ position: "relative" }}>
@@ -42,28 +41,28 @@ const ActiveVisual = ({ answeredBy, incident }) => {
             source={require("../../../assets/IncidentImages/Dispatch.png")}
           />
         )}
-        {incident.type === "Covid" ? (
+        {incident?.type === "Covid" ? (
           <View style={{ position: "absolute", right: 0, bottom: 0 }}>
             <Image
               style={styles.opcenImage}
               source={require("../../../assets/icons/incidentType/Covid-res.png")}
             />
           </View>
-        ) : incident.type === "Fire" ? (
+        ) : incident?.type === "Fire" ? (
           <View style={{ position: "absolute", right: 0, bottom: 0 }}>
             <Image
               style={styles.opcenImage}
               source={require("../../../assets/icons/incidentType/Fire.png")}
             />
           </View>
-        ) : incident.type === "Medical" ? (
+        ) : incident?.type === "Medical" ? (
           <View style={{ position: "absolute", right: 0, bottom: 0 }}>
             <Image
               style={styles.opcenImage}
               source={require("../../../assets/icons/incidentType/Medical.png")}
             />
           </View>
-        ) : incident.type === "Crime" ? (
+        ) : incident?.type === "Crime" ? (
           <View style={{ position: "absolute", right: 0, bottom: 0 }}>
             <Image
               style={styles.opcenImage}
@@ -89,7 +88,7 @@ const ActiveVisual = ({ answeredBy, incident }) => {
           color: "#333",
         }}
       >
-        {answeredBy.name} {answeredBy.Lname}
+        {answeredBy.name} {answeredBy.lname}
       </Text>
       <Text style={{ color: "#dc3545", letterSpacing: 0.5, paddingTop: 5 }}>
         DISPATCH

@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Modal } from "react-native";
 import React, { useEffect, useState } from "react";
 import { EvilIcons } from "@expo/vector-icons";
 
-const Alert = ({ type, msg, remove_error }) => {
+const Alert = ({ type, msg, remove_error, onClose, s }) => {
   const [showAlert, setShowAlert] = useState(false);
   const [errorType, setErrorType] = useState("");
 
@@ -21,14 +21,16 @@ const Alert = ({ type, msg, remove_error }) => {
   }, [msg]);
 
   const toogleModal = () => {
-    setShowAlert(false);
+    setShowAlert(!showAlert);
     if (type === null) {
       remove_error();
     }
+    onClose();
   };
   setTimeout(() => {
     setShowAlert(false);
-  }, 5000);
+    onClose();
+  }, 7000);
 
   return (
     msg !== null && (

@@ -83,7 +83,13 @@ const AddExperience = ({ navigation }) => {
           />
         </TouchableOpacity>
       </View>
-      {showAlert ? <Alert msg={"Experience added"} type={"success"} /> : null}
+      {showAlert ? (
+        <Alert
+          msg={"Experience added"}
+          type={"success"}
+          onClose={() => setShowAlert(false)}
+        />
+      ) : null}
       <KeyboardAvoidingView
         style={styles.subContainer}
         behavior={Platform.OS === "ios" ? "padding" : null}
