@@ -1,15 +1,27 @@
-import { View, Text, StyleSheet } from "react-native";
-import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import React from "react";
 import { Feather } from "@expo/vector-icons";
-import Spinner from "../layout/Spinner";
-
-const ActiveComms = () => {
+import { useNavigation } from "@react-navigation/native";
+const ActiveComms = ({ answeredBy, responder }) => {
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      <Feather name="message-square" size={30} color="#215a75" />
-      <Text style={{ color: "#dc3545", letterSpacing: 0.5, paddingTop: 5 }}>
-        MESSENGER
-      </Text>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate("IncidentMessenger", {
+            answeredBy,
+            responder,
+          })
+        }
+      >
+        <View style={{ alignItems: "center", justifyContent: "center" }}>
+          <Feather name="message-square" size={30} color="#215a75" />
+
+          <Text style={{ color: "#dc3545", letterSpacing: 0.5, paddingTop: 5 }}>
+            MESSENGER
+          </Text>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 };

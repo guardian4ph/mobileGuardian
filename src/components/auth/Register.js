@@ -6,9 +6,10 @@ import {
   SafeAreaView,
   StatusBar,
   KeyboardAvoidingView,
+  TextInput,
+  TouchableOpacity,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import { Context as AuthContext } from "../../context/AuthContext";
 import Alert from "../layout/Alert";

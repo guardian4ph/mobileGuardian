@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 
-const ActiveStatus = () => {
+const ActiveStatus = ({ cancelled }) => {
   const [showText, setShowText] = useState(true);
 
   useEffect(() => {
@@ -13,19 +13,35 @@ const ActiveStatus = () => {
   }, []);
   return (
     <View style={styles.container}>
-      <View style={{ display: showText ? "none" : "flex" }}>
-        <Text style={[styles.statusText]}>ACKNOWLEDGED</Text>
-        <Text
-          style={{
-            color: "#dc3545",
-            letterSpacing: 0.5,
-            paddingTop: 5,
-            textAlign: "center",
-          }}
-        >
-          STATUS
-        </Text>
-      </View>
+      {cancelled ? (
+        <View style={{ display: showText ? "none" : "flex" }}>
+          <Text style={[styles.statusText, { color: "red" }]}>CANCELLED</Text>
+          <Text
+            style={{
+              color: "#dc3545",
+              letterSpacing: 0.5,
+              paddingTop: 5,
+              textAlign: "center",
+            }}
+          >
+            STATUS
+          </Text>
+        </View>
+      ) : (
+        <View style={{ display: showText ? "none" : "flex" }}>
+          <Text style={[styles.statusText]}>ACKNOWLEDGED</Text>
+          <Text
+            style={{
+              color: "#dc3545",
+              letterSpacing: 0.5,
+              paddingTop: 5,
+              textAlign: "center",
+            }}
+          >
+            STATUS
+          </Text>
+        </View>
+      )}
     </View>
   );
 };

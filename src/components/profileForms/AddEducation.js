@@ -6,9 +6,10 @@ import {
   SafeAreaView,
   StatusBar,
   KeyboardAvoidingView,
+  TextInput,
+  TouchableOpacity,
 } from "react-native";
 import DatePicker from "react-native-modern-datepicker";
-import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import { Context as ProfileContext } from "../../context/ProfileContext";
 import Checkbox from "expo-checkbox";

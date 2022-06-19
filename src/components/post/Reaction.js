@@ -1,7 +1,6 @@
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import React, { useCallback, useContext } from "react";
 import { Context as PostContext } from "../../context/PostContext";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 const Reaction = ({
   _id,

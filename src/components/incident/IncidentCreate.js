@@ -35,6 +35,7 @@ const IncidentCreate = ({ route }) => {
   const [errorMsg, setErrorMsg] = useState(null);
   const [notSupported, setNotSupported] = useState(false);
   const [engage, setEngage] = useState(false);
+  const [disableBtn, setDisableBtn] = useState(true);
 
   const [nameAddress, setNameAddress] = useState({
     completeaddress: "",
@@ -44,7 +45,7 @@ const IncidentCreate = ({ route }) => {
     lat: "",
     lng: "",
   });
-  const [response, setResponse] = useState("");
+
   const [onlineDispatchers, setOnlineDispatchers] = useState([]);
 
   const toggleMap = () => {
@@ -54,6 +55,20 @@ const IncidentCreate = ({ route }) => {
     }
     setMapSize(true);
   };
+
+  useEffect(() => {
+    let isMounted = true;
+    if (isMounted) {
+      if (nameAddress.completeaddress !== "") {
+        setDisableBtn(false);
+      }
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [nameAddress]);
+
+  console.log(disableBtn);
 
   useEffect(() => {
     (async () => {
@@ -69,9 +84,17 @@ const IncidentCreate = ({ route }) => {
   }, []);
 
   useEffect(() => {
+    let isMounted = true;
     socket.on("getDispatcher", (data) => {
-      setOnlineDispatchers(data.filter((res) => res.user !== user._id));
+      if (isMounted) {
+        setOnlineDispatchers(data.filter((res) => res.user !== user._id));
+      }
     });
+
+    return () => {
+      isMounted = false;
+    };
+
     // eslint-disable-next-line
   }, []);
   useEffect(() => {
@@ -153,7 +176,7 @@ const IncidentCreate = ({ route }) => {
     <SafeAreaView style={styles.container}>
       {engage ? (
         <Alert
-          msg={"All dispatchers are engage to a call..."}
+          msg={"All dispatchers are engaged to a call..."}
           type={"Engage"}
           onClose={() => setEngage(false)}
         />
@@ -217,6 +240,7 @@ const IncidentCreate = ({ route }) => {
               style={mapSize ? styles.mapContainer : styles.mapContainerLarge}
             >
               <Spinner />
+              {/* <Text>getting your current location...</Text> */}
             </View>
           )}
         </>
@@ -270,7 +294,12 @@ const IncidentCreate = ({ route }) => {
           }}
         >
           <TouchableOpacity
-            style={[styles.btnView, styles.btnMain]}
+            disabled={disableBtn}
+            style={
+              disableBtn
+                ? [styles.btnView, styles.btnMainTint]
+                : [styles.btnView, styles.btnMain]
+            }
             onPress={() => onSubmit()}
           >
             <Text style={[styles.btnContent, styles.txtWhite]}>
@@ -278,7 +307,12 @@ const IncidentCreate = ({ route }) => {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.btnView, styles.btnDanger, { marginBottom: 20 }]}
+            disabled={disableBtn}
+            style={
+              disableBtn
+                ? [styles.btnView, styles.btnDangertint, { marginBottom: 20 }]
+                : [styles.btnView, styles.btnDanger, { marginBottom: 20 }]
+            }
             onPress={() => navigation.goBack()}
           >
             <Text style={[styles.btnContent, styles.txtWhite]}>Cancel</Text>
@@ -368,8 +402,14 @@ const styles = StyleSheet.create({
   btnMain: {
     backgroundColor: "#215a75",
   },
+  btnMainTint: {
+    backgroundColor: "#c8d6dc",
+  },
   btnDanger: {
     backgroundColor: "#dc3545",
+  },
+  btnDangertint: {
+    backgroundColor: "#E56874",
   },
   btnSecondary: {
     backgroundColor: "#ddd",

@@ -7,14 +7,12 @@ import {
   SafeAreaView,
   StatusBar,
   KeyboardAvoidingView,
-} from "react-native";
-
-import { Feather } from "@expo/vector-icons";
-import {
   FlatList,
   TextInput,
   TouchableOpacity,
-} from "react-native-gesture-handler";
+} from "react-native";
+
+import { Feather } from "@expo/vector-icons";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import Map from "../utilitize/Map";
 import * as Location from "expo-location";

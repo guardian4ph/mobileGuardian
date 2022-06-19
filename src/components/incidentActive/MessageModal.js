@@ -1,56 +1,16 @@
-import {
-  View,
-  Text,
-  Modal,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
-import React, { useState, useEffect } from "react";
-import { EvilIcons } from "@expo/vector-icons";
+import { View, Text, StyleSheet, Modal, TouchableOpacity } from "react-native";
+import React from "react";
+import { AntDesign } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
-const CancelModal = ({
-  socket,
+const MessageModal = ({
+  answeredBy,
   show,
-  incident,
-  responder,
   onClose,
-  incidentCancelled,
+  arrivalMessage,
+  responder,
 }) => {
-  const [reason, setReason] = useState("");
-  const [disable, setDisable] = useState(true);
-  const [dispatcher, setDispatcher] = useState("");
-
-  useEffect(() => {
-    if (responder) {
-      setDispatcher(responder[0]?.user._id);
-    }
-  }, [responder]);
-
-  useEffect(() => {
-    if (reason !== "" || reason !== null) {
-      setDisable(false);
-    }
-  }, [reason]);
-
-  const onSubmit = async () => {
-    try {
-      const incidentId = incident._id;
-      const reportedby_userId = incident.user;
-      incidentCancelled({ incidentId, reportedby_userId, reason });
-
-      socket.emit("sendCancelledIncident", {
-        receiverId: dispatcher,
-        senderId: incident.user,
-        reason: reason,
-      });
-
-      onClose();
-    } catch (error) {
-      console.log("Error cancelling report", "danger");
-    }
-  };
-
+  const navigation = useNavigation();
   return (
     <Modal transparent visible={show}>
       <View style={styles.modalContainer}>
@@ -59,7 +19,7 @@ const CancelModal = ({
             style={{
               alignItems: "center",
               justifyContent: "flex-start",
-              padding: 10,
+              padding: 20,
               backgroundColor: "#215a75",
               overflow: "hidden",
               borderTopEndRadius: 10,
@@ -68,35 +28,32 @@ const CancelModal = ({
               flexDirection: "row",
             }}
           >
-            <EvilIcons name="close-o" size={30} color="#fff" />
+            <AntDesign name="message1" size={30} color="#fff" />
+
             <Text
               style={{
                 color: "#fff",
                 letterSpacing: 0.5,
                 fontSize: 18,
+                padding: 10,
               }}
             >
-              {"  "}Are you sure you want to cancel?
+              Message from {answeredBy?.name} {answeredBy?.lname}
             </Text>
           </View>
           <View
             style={{
               alignItems: "center",
               justifyContent: "center",
-              marginVertical: 10,
+              marginVertical: 40,
             }}
           >
-            <TextInput
-              placeholder="Reason"
-              style={styles.inputStyle}
-              placeholderTextColor="#333"
-              multiline
-              keyboardType="ascii-capable"
-              onChangeText={setReason}
-            ></TextInput>
-            <Text style={[styles.btnContent, styles.txtDark]}>
-              Saving lives and properties is everyones moral duty, please use
-              Guardian responsibly.{" "}
+            <Text
+              numberOfLines={7}
+              ellipsizeMode="tail"
+              style={[styles.messageTxt, styles.txtDark]}
+            >
+              " {arrivalMessage?.text} "
             </Text>
           </View>
           <View
@@ -109,21 +66,22 @@ const CancelModal = ({
             }}
           >
             <TouchableOpacity
-              onPress={() => onSubmit()}
-              style={
-                disable
-                  ? [styles.btnView, styles.btnDisable]
-                  : [styles.btnView, styles.btnDanger]
-              }
-              disabled={disable}
+              onPress={() => {
+                navigation.navigate("IncidentMessenger", {
+                  answeredBy,
+                  responder,
+                }),
+                  onClose();
+              }}
+              style={[styles.btnView, styles.btnDanger]}
             >
-              <Text style={[styles.btnContent, styles.txtWhite]}>Yes</Text>
+              <Text style={[styles.btnContent, styles.txtDark]}>Reply</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => onClose()}
               style={[styles.btnView, styles.btnMain]}
             >
-              <Text style={[styles.btnContent, styles.txtWhite]}>No</Text>
+              <Text style={[styles.btnContent, styles.txtDark]}>Close</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -131,6 +89,7 @@ const CancelModal = ({
     </Modal>
   );
 };
+
 const styles = StyleSheet.create({
   modalAlert: {
     width: "85%",
@@ -168,7 +127,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   btnDanger: {
-    backgroundColor: "#dc3545",
+    borderColor: "#215a75",
+    borderWidth: 1,
   },
   btnDisable: {
     backgroundColor: "#ab6868",
@@ -176,11 +136,18 @@ const styles = StyleSheet.create({
   btnSecondary: {
     backgroundColor: "#ddd",
   },
+  messageTxt: {
+    fontSize: 24,
+    color: "#333",
+    letterSpacing: 0.2,
+    marginHorizontal: 20,
+    textAlign: "justify",
+  },
   txtWhite: {
     color: "#fff",
   },
   txtDark: {
-    color: "#333",
+    color: "#215a75",
     paddingHorizontal: 10,
   },
   btnContent: {
@@ -189,4 +156,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CancelModal;
+export default MessageModal;

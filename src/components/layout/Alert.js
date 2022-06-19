@@ -27,10 +27,15 @@ const Alert = ({ type, msg, remove_error, onClose, s }) => {
     }
     onClose();
   };
-  setTimeout(() => {
-    setShowAlert(false);
-    onClose();
-  }, 7000);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowAlert(false);
+      onClose();
+    }, 7000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     msg !== null && (
@@ -89,7 +94,7 @@ const Alert = ({ type, msg, remove_error, onClose, s }) => {
             >
               <View style={[styles.btnView, styles.btnMain]}>
                 <TouchableOpacity onPress={() => toogleModal()}>
-                  <Text style={{ textAlign: "center", color: "#fff" }}>
+                  <Text style={{ textAlign: "center", color: "#333" }}>
                     Okay
                   </Text>
                 </TouchableOpacity>
@@ -119,14 +124,15 @@ const styles = StyleSheet.create({
   btnView: {
     borderColor: "#fff",
     borderRadius: 5,
-    height: 38,
-    width: 200,
+    height: 50,
+    width: 160,
     paddingVertical: 10,
-
-    marginVertical: 10,
+    justifyContent: "center",
+    margin: 3,
   },
   btnMain: {
-    backgroundColor: "#215a75",
+    borderColor: "#215a75",
+    borderWidth: 1,
   },
 });
 

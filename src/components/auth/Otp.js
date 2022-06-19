@@ -1,6 +1,14 @@
 import React from "react";
-import { Text, View, StyleSheet, SafeAreaView, StatusBar } from "react-native";
-import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
+import {
+  Text,
+  View,
+  StyleSheet,
+  SafeAreaView,
+  StatusBar,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
+
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 const Otp = (props) => {
   return (

@@ -4,9 +4,7 @@ import {
   Text,
   View,
   SafeAreaView,
-  Alert,
   Platform,
-  StatusBar,
   TouchableOpacity,
   Image,
 } from "react-native";

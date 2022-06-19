@@ -20,7 +20,22 @@ const IncidentReducer = (state, action) => {
       return {
         ...state,
         cancelled: action.payload,
+        // incident: null,
         loading: false,
+      };
+    case "clearIncident":
+      return {
+        createIncident: false,
+        incident: null,
+        inicidents: null,
+        loading: true,
+        cancelled: null,
+        errorMessage: "",
+      };
+    case "volunteerIncidentClose":
+      return {
+        ...state,
+        incidentclose: action.payload,
       };
     case "add_error":
       return { ...state, errorMessage: action.payload };
@@ -149,15 +164,58 @@ const incidentCancelled =
     }
   };
 
+const clearIncident = (dispatch) => async () => {
+  try {
+    dispatch({
+      type: "clearIncident",
+    });
+    console.log("Incident Cleared");
+  } catch (err) {
+    dispatch({
+      type: "add_error",
+      payload: err.msg,
+    });
+  }
+};
+
+const volunteerIncidentClose =
+  (dispatch) =>
+  async ({ senderId, report, summary, opcenName, opcenProfilepic, status }) => {
+    const body = {
+      senderId,
+      report,
+      summary,
+      opcenName,
+      opcenProfilepic,
+      status,
+    };
+    console.log("Close Volunter Incident Body");
+    try {
+      dispatch({ type: "volunteerIncidentClose", payload: body });
+    } catch (err) {
+      dispatch({
+        type: "add_error",
+        payload: err.msg,
+      });
+    }
+  };
+
 export const { Provider, Context } = createDataContext(
   IncidentReducer,
-  { submitIncident, missedCall, incidentCancelled },
+  {
+    submitIncident,
+    missedCall,
+    incidentCancelled,
+    clearIncident,
+    volunteerIncidentClose,
+  },
   {
     createIncident: false,
     incident: null,
     inicidents: null,
     loading: true,
     cancelled: null,
+    incidentclose: null,
     errorMessage: "",
   }
 );

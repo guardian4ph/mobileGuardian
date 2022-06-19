@@ -6,11 +6,11 @@ import {
   StatusBar,
   SafeAreaView,
   Image,
+  TouchableOpacity,
 } from "react-native";
 import { Context as ProfileContext } from "../../context/ProfileContext";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import {
   useFonts,
   Inter_300Light,

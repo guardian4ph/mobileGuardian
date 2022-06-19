@@ -30,6 +30,8 @@ import AddExperience from "./src/components/profileForms/AddExperience";
 import Setting from "./src/components/dashboard/Setting";
 import IncidentCreate from "./src/components/incident/IncidentCreate";
 import ActiveIncident from "./src/components/incidentActive/ActiveIncident";
+import IncidentClose from "./src/components/incidentActive/IncidentClose";
+import IncidentMessenger from "./src/components/incidentActive/IncidentMessenger";
 
 import Spinner from "./src/components/layout/Spinner";
 
@@ -91,6 +93,14 @@ export default function App() {
                       <Stack.Screen
                         name="ActiveIncident"
                         component={ActiveIncident}
+                      />
+                      <Stack.Screen
+                        name="IncidentClose"
+                        component={IncidentClose}
+                      />
+                      <Stack.Screen
+                        name="IncidentMessenger"
+                        component={IncidentMessenger}
                       />
                       <Stack.Screen name="Spinner" component={Spinner} />
                       <Stack.Screen name="Setting" component={Setting} />

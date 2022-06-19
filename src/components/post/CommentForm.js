@@ -1,6 +1,11 @@
-import { StyleSheet, View, KeyboardAvoidingView, Keyboard } from "react-native";
+import {
+  StyleSheet,
+  View,
+  TextInput,
+  TouchableOpacity,
+  Keyboard,
+} from "react-native";
 import React, { useContext, useEffect, useState } from "react";
-import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { Feather } from "@expo/vector-icons";
 import { Context as ProfileContext } from "../../context/ProfileContext";
 import { Context as PostContext } from "../../context/PostContext";
